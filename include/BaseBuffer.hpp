@@ -10,10 +10,18 @@ namespace network {
 template<typename T>
 concept byte_container = requires {
 	typename T::value_type;
-	requires std::same_as<typename T::value_type, uint8_t>;
+	requires std::same_as<typename T::value_type, uint8_t>; 
 };
 
-template<byte_container Ctr>
+template<typename T>
+concept contiguous_container = requires(T t) {
+	{ t.data() } -> std::same_as<uint8_t*>;
+}
+
+template<typename T>
+concept contiguous_byte_container = byte_container<T> && contiguous_container<T>;
+
+template<contiguous_byte_container Ctr>
 class BaseBuffer {
 public:
 	using value_type = uint8_t;
@@ -38,11 +46,17 @@ public:
 	bool		push_back(value_type);
 	bool		push_back(std::u8string const&);
 	bool		push_back(std::u8string_view);
-	bool		push_back(BaseBuffer const&);
+	template<byte_container Dtr>
+	bool		push_back(BaseBuffer<Dtr> const&);
 
 private:
 	Ctr	_ctr;
 }; // class BaseBuffer
+
+template<byte_container Ctr>
+std::istream&	operator>>(std::istream&, BaseBuffer<Ctr>&);
+template<byte_container Ctr>
+std::ostream&	operator<<(std::ostream&, BaseBuffer<Ctr> const&);
 
 }; // namespace network
 
