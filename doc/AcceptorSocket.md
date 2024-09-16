@@ -1,7 +1,7 @@
 # Acceptor
 ```cpp
 template<network::Domain DOMAIN>
-class network::Acceptor: public network::StreamSocket<DOMAIN>;
+class network::AcceptorSocket: public network::StreamSocket<DOMAIN>;
 ```
 Class representing a socket that can listen for incoming connections.
 ## Member types
