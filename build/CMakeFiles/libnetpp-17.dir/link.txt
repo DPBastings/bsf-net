@@ -1,0 +1,2 @@
+/usr/bin/ar qc liblibnetpp-17.a "CMakeFiles/libnetpp-17.dir/source/Address_IPv4.cpp.o" "CMakeFiles/libnetpp-17.dir/source/except.cpp.o" "CMakeFiles/libnetpp-17.dir/source/Handle.cpp.o" "CMakeFiles/libnetpp-17.dir/source/Poller_ctor.cpp.o" "CMakeFiles/libnetpp-17.dir/source/Poller_Event.cpp.o" "CMakeFiles/libnetpp-17.dir/source/Poller_method.cpp.o"
+/usr/bin/ranlib liblibnetpp-17.a

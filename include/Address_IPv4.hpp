@@ -1,5 +1,5 @@
-#ifndef NETWORK_ADDRESS_IPV4_HPP
-# define NETWORK_ADDRESS_IPV4_HPP
+#ifndef NETPP_ADDRESS_IPV4_HPP
+# define NETPP_ADDRESS_IPV4_HPP
 
 # include "network.hpp"
 
@@ -8,31 +8,33 @@ extern "C" {
 }
 
 namespace network {
-	template<>
-	class Address<Domain::ipv4> {
-	public:
-		Address() = default;
-		Address(in_port_t, uint32_t);
 
-		operator std::string() const noexcept;
+template<>
+class Address<Domain::ipv4> {
+public:
+	Address() = default;
+	Address(in_port_t, uint32_t);
 
-		uint32_t	address() const noexcept;
-		in_port_t	port() const noexcept;
+	operator std::string() const noexcept;
 
-		sockaddr const*		raw() const noexcept;
-		static socklen_t	size();
+	uint32_t	address() const noexcept;
+	in_port_t	port() const noexcept;
 
-	private:
-		template<Domain DOMAIN, Type TYPE>
-		friend class Socket;
-		friend class Acceptor<Domain::ipv4>;
+	sockaddr const*		raw() const noexcept;
+	static socklen_t	size();
 
-		Address(int);
+private:
+	template<Domain DOMAIN, Type TYPE>
+	friend class Socket;
+	friend class Acceptor<Domain::ipv4>;
 
-		sockaddr*	raw() noexcept;
-		
-		sockaddr_in	_addr;
-	}; // specialized class template SocketAddress<Domain::ipv4>
+	Address(int);
+
+	sockaddr*	raw() noexcept;
+	
+	sockaddr_in	_addr;
+}; // specialized class template SocketAddress<Domain::ipv4>
+
 }; // namespace network
 
-#endif // NETWORK_ADDRESS_IPV4_HPP
+#endif // NETPP_ADDRESS_IPV4_HPP

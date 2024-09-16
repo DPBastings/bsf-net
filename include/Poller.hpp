@@ -1,5 +1,5 @@
-#ifndef NETWORK_POLLER_HPP
-# define NETWORK_POLLER_HPP
+#ifndef NETPP_POLLER_HPP
+# define NETPP_POLLER_HPP
 
 # include "network.hpp"
 # include "network/Handle.hpp"
@@ -16,7 +16,7 @@ extern "C" {
 }
 
 namespace network {
-
+	
 class Poller: public Handle {
 public:
 	class Event;
@@ -86,6 +86,6 @@ enum class Poller::EventType: uint32_t {
 
 }; // namespace network
 
-# include "network/Poller_method.tpp"
+# include "Poller_method.tpp"
 
-#endif // NETWORK_POLLER_HPP
+#endif // NETPP_POLLER_HPP

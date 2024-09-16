@@ -1,5 +1,5 @@
-#ifndef NETWORK_UTILS_TPP
-# define NETWORK_UTILS_TPP
+#ifndef NETPP_UTILS_TPP
+# define NETPP_UTILS_TPP
 
 # include <type_traits>
 
@@ -17,4 +17,4 @@ namespace network {
 	}
 }; // namespace network
 
-#endif // NETWORK_UTILS_TPP
+#endif // NETPP_UTILS_TPP

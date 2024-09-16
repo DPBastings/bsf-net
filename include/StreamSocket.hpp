@@ -1,29 +1,31 @@
-#ifndef NETWORK_STREAM_SOCKET_HPP
-# define NETWORK_STREAM_SOCKET_HPP
+#ifndef NETPP_STREAM_SOCKET_HPP
+# define NETPP_STREAM_SOCKET_HPP
 
 # include "network.hpp"
-# include "network/Socket.hpp"
+# include "Socket.hpp"
 
 namespace network {
-	template<Domain DOMAIN>
-	class StreamSocket: public Socket<DOMAIN, Type::stream> {
-	public:
-		using super = Socket<DOMAIN, Type::stream>;
-		using typename super::Raw;
-		using typename super::Address;
-		using typename super::OptionList;
 
-		StreamSocket(OptionList = {}, char const* = nullptr);
-		StreamSocket(Address const&, OptionList = {}, char const* = nullptr);
+template<Domain DOMAIN>
+class StreamSocket: public Socket<DOMAIN, Type::stream> {
+public:
+	using super = Socket<DOMAIN, Type::stream>;
+	using typename super::Raw;
+	using typename super::Address;
+	using typename super::OptionList;
 
-	protected:
-		friend class Acceptor<DOMAIN>;
-		friend class SocketPair<StreamSocket>;
+	StreamSocket(OptionList = {}, char const* = nullptr);
+	StreamSocket(Address const&, OptionList = {}, char const* = nullptr);
 
-		StreamSocket(Raw);
-	}; // class template StreamSocket<Domain>
+protected:
+	friend class Acceptor<DOMAIN>;
+	friend class SocketPair<StreamSocket>;
+
+	StreamSocket(Raw);
+}; // class template StreamSocket<Domain>
+
 }; // namespace network
 
 # include "StreamSocket.tpp"
 
-#endif // NETWORK_STREAM_SOCKET_HPP
+#endif // NETPP_STREAM_SOCKET_HPP

@@ -1,14 +1,13 @@
-#ifndef NETWORK_BUFFER_TPP
-# define NETWORK_BUFFER_TPP
+#ifndef NETPP_BUFFER_TPP
+# define NETPP_BUFFER_TPP
 
-# ifndef NETWORK_BUFFER_HPP
+# ifndef NETPP_BUFFER_HPP
 #  error "include __FILE__ in network/Buffer.hpp"
-# endif // NETWORK_BUFFER_HPP
+# endif // NETPP_BUFFER_HPP
 
 # include <sstream>
 
 namespace network {
-
 template<size_t SIZE>
 Buffer<SIZE>::Buffer():
 	super(), _len(0) {}
@@ -133,4 +132,4 @@ operator<<(std::ostream& os, Buffer<SIZE> const& that) {
 
 }; // namespace network
 
-#endif // NETWORK_BUFFER_TPP
+#endif // NETPP_BUFFER_TPP

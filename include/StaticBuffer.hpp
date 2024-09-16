@@ -1,7 +1,8 @@
-#ifndef NETWORK_STATIC_BUFFER_HPP
-# define NETWORK_STATIC_BUFFER_HPP
+#ifndef NETPP_STATIC_BUFFER_HPP
+# define NETPP_STATIC_BUFFER_HPP
 
 # include "network.hpp"
+# include "BaseBuffer.hpp"
 
 # include <array>
 # include <istream>
@@ -10,55 +11,31 @@
 
 namespace network {
 
-template<size_t SIZE>
-class Buffer: public BaseBuffer<
-	std::array<uint8_t, SIZE>::iterator,
-	std::array<char, SIZE>::const_iterator>
-	> {
+template<size_t SIZE> // should be like std::array::size_type
+class StaticBufferContainer: private std::array<uint8_t, SIZE> {
 public:
-	using super = std::array<char, SIZE>;
-	using iterator = typename super::iterator;
-	using const_iterator = typename super::const_iterator;
+	using super = std::array<uint8_t, SIZE>;
+	using super::value_type;
+	using super::size_type;
 
-	Buffer();
+	size_type	size() const noexcept;
+	size_type	capacity() const noexcept;
+	using Ctr::begin;
+	using Ctr::cbegin;
+	using Ctr::end;
+	using Ctr::cend;
 
-	operator std::string() const;
-
-	size_t	length() const noexcept;
-	size_t	capacity() const noexcept;
-
-	iterator		begin() noexcept;
-	const_iterator	begin() const noexcept;
-	const_iterator	cbegin() const noexcept;
-	iterator		end() noexcept;
-	const_iterator	end() const noexcept;
-	const_iterator	cend() const noexcept;
-
-	void	empty() noexcept;
-	size_t	get(std::istream&);
-	size_t	put(std::ostream&) const;
-
-	bool	push_back(char) noexcept;
-	size_t	push_back(std::string const&) noexcept;
-	template<size_t TSIZE>
-	size_t	push_back(Buffer<TSIZE> const&) noexcept;
-
+	void	clear() noexcept;
+	bool	push_back(value_type) noexcept;
 private:
-	template<Domain DOMAIN, Type TYPE>
-	friend class Socket;
-	template<size_t S>
-	friend std::istream&	operator>>(std::istream&, Buffer<S>&);
-
-	size_t	_len;
-}; // class template Buffer
+	size_type	_size;
+}; // class StaticBufferContainer
 
 template<size_t SIZE>
-std::istream&	operator>>(std::istream&, Buffer<SIZE>&);
-template<size_t SIZE>
-std::ostream&	operator<<(std::ostream&, Buffer<SIZE> const&);
+using StaticBuffer = BaseBuffer<StaticBufferContainer<SIZE>>;
 
 }; // namespace network
 
-# include "network/Buffer.tpp"
+# include "network/StaticBuffer.tpp"
 
-#endif // NETWORK_STATIC_BUFFER_HPP
+#endif // NETPP_STATIC_BUFFER_HPP

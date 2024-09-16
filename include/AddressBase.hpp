@@ -1,5 +1,5 @@
-#ifndef NETWORK_ADDRESS_BASE_HPP
-# define NETWORK_ADDRESS_BASE_HPP
+#ifndef NETPP_ADDRESS_BASE_HPP
+# define NETPP_ADDRESS_BASE_HPP
 
 # include "network.hpp"
 
@@ -8,6 +8,7 @@ extern "C" {
 }
 
 namespace network {
+
 class AddressBase {
 public:
 	virtual ~AddressBase() = default;
@@ -15,6 +16,7 @@ public:
 	virtual sockaddr const*	raw() const noexcept = 0;
 	virtual socklen_t		size() const noexcept = 0;
 }; // class Address
+
 }; // namespace network
 
-#endif // NETWORK_ADDRESS_BASE_HPP
+#endif // NETPP_ADDRESS_BASE_HPP

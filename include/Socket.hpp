@@ -1,78 +1,80 @@
-#ifndef NETWORK_SOCKET_HPP
-# define NETWORK_SOCKET_HPP
+#ifndef NETPP_SOCKET_HPP
+# define NETPP_SOCKET_HPP
 
 # include <initializer_list>
 # include <stdexcept>
 # include <utility>
 
 # include "network.hpp"
-# include "network/Handle.hpp"
+# include "Handle.hpp"
 
 namespace network {
-	enum class SocketOption: int;
-	class SocketException;
-	
-	template<Domain DOMAIN, Type TYPE>
-	class Socket: public Handle {
-	public:
-		using OptionList = std::initializer_list<SocketOption>;
-		using Address = network::Address<DOMAIN>;
-		using typename Handle::Raw;
 
-		static constexpr Domain	domain = DOMAIN;
-		static constexpr Type	type = TYPE;
+enum class SocketOption: int;
+class SocketException;
 
-		Socket(OptionList = {}, char const* = "");
-		Socket(Address const&, OptionList = {}, char const* = "");
+template<Domain DOMAIN, Type TYPE>
+class Socket: public Handle {
+public:
+	using OptionList = std::initializer_list<SocketOption>;
+	using Address = network::Address<DOMAIN>;
+	using typename Handle::Raw;
 
-		void	bind(Address const&);
+	static constexpr Domain	domain = DOMAIN;
+	static constexpr Type	type = TYPE;
 
-		static std::pair<Socket, Socket>	pair(OptionList, char const*);
+	Socket(OptionList = {}, char const* = "");
+	Socket(Address const&, OptionList = {}, char const* = "");
 
-		template<size_t BSIZE>
-		size_t	write(Buffer<BSIZE> const&, int = 0) const;
-		template<size_t BSIZE>
-		size_t	read(Buffer<BSIZE>&, int = 0) const;
+	void	bind(Address const&);
 
-		Address	address() const noexcept;
-		bool	listens() const noexcept;  // would use forbidden function
-		int		protocol() const noexcept; // would use forbidden function
+	static std::pair<Socket, Socket>	pair(OptionList, char const*);
 
-	protected:
-		template<typename Socket>
-		friend class SocketPair;
+	template<size_t BSIZE>
+	size_t	write(Buffer<BSIZE> const&, int = 0) const;
+	template<size_t BSIZE>
+	size_t	read(Buffer<BSIZE>&, int = 0) const;
 
-		Socket(Raw);
+	Address	address() const noexcept;
+	bool	listens() const noexcept;  // would use forbidden function
+	int		protocol() const noexcept; // would use forbidden function
 
-	private:
-		static Raw	_new_handle(OptionList, char const*) noexcept;
-		static int	_get_protocol(char const*) noexcept;
-	}; // class template Socket
+protected:
+	template<typename Socket>
+	friend class SocketPair;
 
-	template<typename SOCKET>
-	class SocketPair: public std::pair<SOCKET, SOCKET> {
-	public:
-		using SocketClass = SOCKET;
-		using OptionList = typename SocketClass::OptionList;
+	Socket(Raw);
 
-		static constexpr Domain	domain = SOCKET::domain;
-		static constexpr Type	type = SOCKET::type;
+private:
+	static Raw	_new_handle(OptionList, char const*) noexcept;
+	static int	_get_protocol(char const*) noexcept;
+}; // class template Socket
 
-		SocketPair(OptionList = {}, char const* = "");
-	}; // class template SocketPair
+template<typename SOCKET>
+class SocketPair: public std::pair<SOCKET, SOCKET> {
+public:
+	using SocketClass = SOCKET;
+	using OptionList = typename SocketClass::OptionList;
 
-	enum class SocketOption: int {
-		nonblock = SOCK_NONBLOCK,
-		cloexec = SOCK_CLOEXEC,
-	}; // enum class SocketOption
+	static constexpr Domain	domain = SOCKET::domain;
+	static constexpr Type	type = SOCKET::type;
 
-	class SocketException: public network::Exception {
-	public:
-		SocketException(char const*);
-	}; // class Socket::Exception
+	SocketPair(OptionList = {}, char const* = "");
+}; // class template SocketPair
+
+enum class SocketOption: int {
+	nonblock = SOCK_NONBLOCK,
+	cloexec = SOCK_CLOEXEC,
+}; // enum class SocketOption
+
+class SocketException: public network::Exception {
+public:
+	SocketException(char const*);
+}; // class Socket::Exception
+
 }; // namespace network
 
 # include "network/Socket.tpp"
 # include "network/SocketPair.tpp"
 
-#endif // NETWORK_SOCKET_HPP
+#endif // NETPP_SOCKET_HPP

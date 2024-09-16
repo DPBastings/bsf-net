@@ -1,0 +1,3 @@
+/home/david/Development/netpp/build/CMakeFiles/libnetpp-17.dir
+/home/david/Development/netpp/build/CMakeFiles/edit_cache.dir
+/home/david/Development/netpp/build/CMakeFiles/rebuild_cache.dir

@@ -1,5 +1,5 @@
-#ifndef NETWORK_HANDLE_HPP
-# define NETWORK_HANDLE_HPP
+#ifndef NETPP_HANDLE_HPP
+# define NETPP_HANDLE_HPP
 
 # include "network.hpp"
 
@@ -7,44 +7,44 @@
 # include <stdexcept>
 
 namespace network {
-	class Handle {
-	public:
-		class Exception;
-		using Raw = int;
+class Handle {
+public:
+	class Exception;
+	using Raw = int;
 
-		static constexpr Raw	_invalid_handle = -1;
+	static constexpr Raw	_invalid_handle = -1;
 
-		Handle();
-		virtual ~Handle();
-		Handle(Raw);
-		Handle(Handle const&);
-		Handle(Handle&&) noexcept;
-		Handle&	operator=(Handle const&) ;
-		Handle&	operator=(Handle&&) noexcept;
+	Handle();
+	virtual ~Handle();
+	Handle(Raw);
+	Handle(Handle const&);
+	Handle(Handle&&) noexcept;
+	Handle&	operator=(Handle const&) ;
+	Handle&	operator=(Handle&&) noexcept;
 
-		bool	good() const noexcept;
+	bool	good() const noexcept;
 
-		Raw		release() noexcept;
-		void	close();
+	Raw		release() noexcept;
+	void	close();
 
-	protected:
-		bool	operator==(Raw const&) const noexcept;
-		bool	operator!=(Raw const&) const noexcept;
+protected:
+	bool	operator==(Raw const&) const noexcept;
+	bool	operator!=(Raw const&) const noexcept;
 
-		Raw	raw() const noexcept;
+	Raw	raw() const noexcept;
 
-	private:
-		friend class Poller;
+private:
+	friend class Poller;
 
-		Raw	_raw;
-	}; // class Handle
+	Raw	_raw;
+}; // class Handle
 
-	using SharedHandle = std::shared_ptr<Handle>;
+using SharedHandle = std::shared_ptr<Handle>;
 
-	class Handle::Exception: public network::Exception {
-	public:
-		Exception(char const*);
-	}; // class Handle::Exception
+class Handle::Exception: public network::Exception {
+public:
+	Exception(char const*);
+}; // class Handle::Exception
 }; // namespace Network
 
-#endif // NETWORK_FILE_HANDLE_HPP
+#endif // NETPP_FILE_HANDLE_HPP
