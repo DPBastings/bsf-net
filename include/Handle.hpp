@@ -7,6 +7,7 @@
 # include <stdexcept>
 
 namespace network {
+	
 class Handle {
 public:
 	class Exception;
@@ -45,6 +46,7 @@ class Handle::Exception: public network::Exception {
 public:
 	Exception(char const*);
 }; // class Handle::Exception
+
 }; // namespace Network
 
 #endif // NETPP_FILE_HANDLE_HPP

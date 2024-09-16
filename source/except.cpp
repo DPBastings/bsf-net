@@ -1,7 +1,7 @@
 #include "network.hpp"
-#include "network/Handle.hpp"
-#include "network/Socket.hpp"
-#include "network/Poller.hpp"
+#include "Handle.hpp"
+#include "Socket.hpp"
+#include "Poller.hpp"
 
 #include <sstream>
 extern "C" {

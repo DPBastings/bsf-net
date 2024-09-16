@@ -26,7 +26,7 @@ public:
 private:
 	template<Domain DOMAIN, Type TYPE>
 	friend class Socket;
-	friend class Acceptor<Domain::ipv4>;
+	friend class AcceptorSocket<Domain::ipv4>;
 
 	Address(int);
 

@@ -6,6 +6,7 @@
 # endif // NETPP_BASE_BUFFER_HPP
 
 namespace network {
+
 template<contiguous_byte_container Ctr>
 BaseBuffer<Ctr>::size_type
 BaseBuffer<Ctr>::remaining_capacity() const noexcept {
@@ -36,6 +37,7 @@ BaseBuffer<Ctr>::append(BaseBuffer<Dtr> const& that) {
 	}
 	return (true);
 }
+
 }; // namespace network
 
 #endif // NETPP_BASE_BUFFER_TPP

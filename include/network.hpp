@@ -1,5 +1,5 @@
-#ifndef NETPP_NETPP_HPP
-# define NETPP_NETPP_HPP
+#ifndef NETPP_HPP
+# define NETPP_HPP
 
 # include <cstddef>
 # include <stdexcept>
@@ -10,7 +10,6 @@ extern "C" {
 }
 
 namespace network {
-using std::size_t;
 
 enum class Domain {
 	unix = AF_UNIX,
@@ -23,7 +22,7 @@ enum class Domain {
 enum class Type {
 	stream = SOCK_STREAM,
 	datagram = SOCK_DGRAM,
-	seq_packet = SOCK_SEQPACHET,
+	seq_packet = SOCK_SEQPACKET,
 	raw = SOCK_RAW,
 	rdm = SOCK_RDM,
 }; // enum class Type
@@ -49,16 +48,19 @@ class DynamicBuffer;
 
 class Poller;
 
-class Exception {
+class Exception: public std::exception {
 public:
+	Exception();
 	Exception(char const*);
 
-	int	errno() const noexcept;
+	char const*	what() const noexcept;
+	int			errno() const noexcept;
 
 private:
 	char const*	_msg;
 	int			_errno;
 }; // class Exception
+
 }; // namespace network
 
-#endif // NETPP_NETPP_HPP
+#endif // NETPP_HPP

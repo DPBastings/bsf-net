@@ -10,6 +10,7 @@
 # include <algorithm>
 
 namespace network {
+
 template<typename T> // Add concept: requires a Handle-derived type.
 SharedHandle
 Poller::add(T&& handle, EventTypes events, Modes modes) {
@@ -40,6 +41,7 @@ Poller::wait(unsigned int timeout) const {
 	}
 	return (evs);
 }
+
 }; // namespace network
 
 #endif // NETPP_POLLER_METHOD_TPP

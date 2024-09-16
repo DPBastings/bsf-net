@@ -6,6 +6,7 @@
 # include <string>
 
 namespace network {
+	
 template<typename T>
 concept byte_container = requires {
 	typename T::value_type;
@@ -50,6 +51,7 @@ template<contiguous_byte_container Ctr>
 std::istream&	operator>>(std::istream&, BaseBuffer<Ctr>&);
 template<contiguous_byte_container Ctr>
 std::ostream&	operator<<(std::ostream&, BaseBuffer<Ctr> const&);
+
 }; // namespace network
 
 #include "BaseBuffer.tpp"

@@ -1,4 +1,4 @@
-#include "network/Handle.hpp"
+#include "Handle.hpp"
 
 extern "C" {
 #include <unistd.h>
@@ -6,22 +6,17 @@ extern "C" {
 
 using network::Handle;
 
-#include <iostream>
-
 // Basic operations
 
 Handle::Handle():
 	_raw(_invalid_handle) {}
 
 Handle::~Handle() {
-	std::cerr << "closing handle " << std::to_string(_raw) << std::endl;
 	close();
 }
 
 Handle::Handle(Raw raw):
-	_raw(raw) {
-	std::cerr << "opened handle " << std::to_string(_raw) << std::endl;
-	}
+	_raw(raw) {}
 
 
 Handle::Handle(Handle const& that):

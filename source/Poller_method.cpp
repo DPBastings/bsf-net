@@ -1,14 +1,12 @@
-#include "network/Poller.hpp"
+#include "Poller.hpp"
 
 #include <algorithm>
 
-#include "network/utils.tpp"
+#include "utils.tpp"
 
 using network::Handle;
 using network::SharedHandle;
 using network::Poller;
-
-#include <iostream>
 
 extern int	errno;
 
