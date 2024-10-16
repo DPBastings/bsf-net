@@ -4,62 +4,58 @@
 # include <cstddef>
 # include <stdexcept>
 
-extern "C" {
 # include <sys/socket.h>
 # include <sys/types.h>
-}
 
 namespace network {
 
-enum class Domain {
-	unix = AF_UNIX,
+enum class socket_domain {
 	local = AF_LOCAL,
 	ipv4 = AF_INET,
-	ipv6 = AF_INET6,
-	bluetooth = AF_BLUETOOTH,
-}; // enum class Domain
+	// ipv6 = AF_INET6,
+	// bluetooth = AF_BLUETOOTH,
+}; // enum class socket_domain
 
-enum class Type {
+enum class socket_type {
 	stream = SOCK_STREAM,
-	datagram = SOCK_DGRAM,
-	seq_packet = SOCK_SEQPACKET,
-	raw = SOCK_RAW,
-	rdm = SOCK_RDM,
-}; // enum class Type
+	// datagram = SOCK_DGRAM,
+	// seq_packet = SOCK_SEQPACKET,
+	// raw = SOCK_RAW,
+	// rdm = SOCK_RDM,
+}; // enum class socket_type
 
-class Handle;
+class handle;
 	
-template<Domain, Type>
-class Socket;
+template<socket_domain, socket_type>
+class socket;
 
-template<Domain>
-class Address;
+template<socket_domain>
+class address;
 
-template<Domain>
-class StreamSocket;
+template<socket_domain>
+class stream_socket;
 
-template<Domain>
-class AcceptorSocket;
+template<socket_domain>
+class acceptor_socket;
 
-template<size_t>
+template<std::size_t>
 class StaticBuffer;
 
 class DynamicBuffer;
 
-class Poller;
+class poller;
 
-class Exception: public std::exception {
+class exception: public std::exception {
 public:
-	Exception();
-	Exception(char const*);
+	exception(char const* = "") noexcept;
 
 	char const*	what() const noexcept;
-	int			errno() const noexcept;
+	int			error() const noexcept;
 
 private:
 	char const*	_msg;
 	int			_errno;
-}; // class Exception
+}; // class exception
 
 }; // namespace network
 

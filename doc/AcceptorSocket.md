@@ -1,20 +1,20 @@
-# Acceptor
+# acceptor_socket
 ```cpp
-template<network::Domain DOMAIN>
-class network::AcceptorSocket: public network::StreamSocket<DOMAIN>;
+template<network::socket_domain DOMAIN>
+class network::acceptor_socket: public network::stream_socket<DOMAIN>;
 ```
 Class representing a socket that can listen for incoming connections.
 ## Member types
-- `Address`
-Inherited from `StreamSocket`.
+- `address`
+Inherited from `stream_socket`.
 - `OptionList`
-Inherited from `StreamSocket`.
+Inherited from `stream_socket`.
 ## Methods
 ### Constructors
 ```cpp
-Acceptor<DOMAIN>::Acceptor(OptionList opts, char const* prot);                                   // 1
-Acceptor<DOMAIN>::Acceptor(Address const& addr, OptionList opts, char const* prot);              // 2
-Acceptor<DOMAIN>::Acceptor(int backlog, Address const& addr, OptionList opts, char const* prot); // 3
+acceptor_socket<DOMAIN>::acceptor_socket(OptionList opts, char const* prot);                                   // 1
+acceptor_socket<DOMAIN>::acceptor_socket(address const& addr, OptionList opts, char const* prot);              // 2
+acceptor_socket<DOMAIN>::acceptor_socket(int backlog, address const& addr, OptionList opts, char const* prot); // 3
 ```
 1. Opens a socket.
 2. Opens a socket and binds it to `addr`.
@@ -23,19 +23,19 @@ Acceptor<DOMAIN>::Acceptor(int backlog, Address const& addr, OptionList opts, ch
 #### listen
 ```cpp
 void
-Acceptor<DOMAIN>::listen(int backlog) const;
+acceptor_socket<DOMAIN>::listen(int backlog) const;
 ```
 Listen for incoming connections with a maximum queue size of `backlog`.
-##### Exceptions
-- `SocketException` if `listen()` fails.
+##### exceptions
+- `socketexception` if `listen()` fails.
 #### accept
 ```cpp
-StreamSocket<DOMAIN>
-Acceptor<DOMAIN>::accept() const;                                    // 1
-StreamSocket<DOMAIN>
-Acceptor<DOMAIN>::accept(StreamSocket<DOMAIN>::Address& addr) const; // 2
+stream_socket<DOMAIN>
+acceptor_socket<DOMAIN>::accept() const;                                    // 1
+stream_socket<DOMAIN>
+acceptor_socket<DOMAIN>::accept(stream_socket<DOMAIN>::address& addr) const; // 2
 ```
-1. Accept an incoming connection request and create a new stream socket for it. Unless `SocketOption::nonblock` was set for this acceptor, the calling thread is blocked until a connection request is received (an exception is thrown otherwise).
-2. As 1, but also stores the address of the new socket in `addr`, potentially saving a call to `StreamSocket<DOMAIN>::address()` later.
-##### Exceptions
-- `SocketException` if `accept()` fails.
+1. Accept an incoming connection request and create a new stream socket for it. Unless `socketOption::nonblock` was set for this acceptor, the calling thread is blocked until a connection request is received (an exception is thrown otherwise).
+2. As 1, but also stores the address of the new socket in `addr`, potentially saving a call to `stream_socket<DOMAIN>::address()` later.
+##### exceptions
+- `socketexception` if `accept()` fails.

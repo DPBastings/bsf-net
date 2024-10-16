@@ -36,6 +36,6 @@ using StaticBuffer = BaseBuffer<StaticBufferContainer<SIZE>>;
 
 }; // namespace network
 
-# include "network/StaticBuffer.tpp"
+# include "network/StaticBufferContainer.tpp"
 
 #endif // NETPP_STATIC_BUFFER_HPP

@@ -6,14 +6,12 @@ project(
 	DESCRIPTION "A networking library for C++"
 	LANGUAGES CXX)
 
-add_library(netpp-17
-	source/Address_IPv4.cpp
-	source/except.cpp
-	source/Handle.cpp
-	source/Poller_ctor.cpp
-	source/Poller_Event.cpp
-	source/Poller_method.cpp)
-target_include_directories(netpp-17 PUBLIC
+add_library(netpp-20
+	source/address_ipv4.cpp
+	source/exception.cpp
+	source/handle.cpp
+	source/poller.cpp)
+target_include_directories(netpp-20 PUBLIC
 	include)
-target_compile_features(netpp-17 PUBLIC
-	cxx_std_17)
+target_compile_features(netpp-20 PUBLIC
+	cxx_std_20)
