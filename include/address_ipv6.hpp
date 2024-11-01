@@ -4,6 +4,8 @@
 # include "network.hpp"
 # include "./basic_address.hpp"
 
+# include <array>
+
 extern "C" {
 # include <arpa/inet.h>
 }
@@ -13,16 +15,19 @@ namespace network {
 template<>
 class address<socket_domain::ipv6>: public basic_address<address<socket_domain::ipv6>> {
 public:
-	address(in_port_t, uint32_t = INADDR_ANY);
+	using host_type = in6_addr;
+	using port_type = in_port_t;
+
+	address(port_type = 0, host_type = IN6ADDR_ANY_INIT);
 
 	template<typename C>
 	operator std::basic_string<C>() const;
 
-	uint32_t	host() const noexcept;
-	in_port_t	port() const noexcept;
+	host_type	host() const noexcept;
+	port_type	port() const noexcept;
 
-	sockaddr const*	pointer() const noexcept;
-	sockaddr*		pointer() noexcept;
+	sockaddr*		raw() noexcept;
+	sockaddr const*	raw() const noexcept;
 	socklen_t		size() const noexcept;
 
 private:
@@ -30,5 +35,7 @@ private:
 }; // class address<socket_domain::ipv6>
 
 }; // namespace network
+
+# include "./address_ipv6.ipp"
 
 #endif // NETPP_SOCKET_ADDRESS_IPV6_HPP

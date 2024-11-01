@@ -27,11 +27,9 @@ public:
 	void		close();
 
 private:
-	template<socket_domain D, socket_type T>
+	template<socket_domain D, socket_type T, socket_protocol P>
 	friend class socket;
-	template<socket_domain D>
-	friend class stream_socket;
-	template<socket_domain D>
+	template<socket_domain D, socket_type T, socket_protocol P>
 	friend class acceptor_socket;
 	friend class poller;
 

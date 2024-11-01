@@ -2,29 +2,32 @@
 # define NETPP_ACCEPTOR_SOCKET_HPP
 
 # include "network.hpp"
-# include "./stream_socket.hpp"
+# include "socket.hpp"
 
 namespace network {
 
-template<socket_domain D>
-class acceptor_socket: public stream_socket<D> {
+template<socket_type T>
+concept is_connection_based = (T == socket_type::stream /* || T == socket_type::seq_packet */);
+
+template<socket_domain D, socket_type T, socket_protocol P = socket_protocol::unspecified>
+class acceptor_socket: public socket<D, T, P> {
 public:
-	using super = stream_socket<D>;
-	using typename super::address;
-	using typename super::option;
+	using super = socket<D, T, P>;
+	using typename super::address_type;
 
-	acceptor_socket(option = option::none, char const* = nullptr);
-	acceptor_socket(address const&, option = option::none, char const* = nullptr);
-	acceptor_socket(int, address const&, option = option::none, char const* = nullptr);
+	acceptor_socket(address_type const&, bool = false, bool = true);
+	acceptor_socket(int, address_type const&, bool = false, bool = true);
 
-	void				listen(int) const;
-	stream_socket<D>	accept() const;
-	stream_socket<D>	accept(address&) const;
+	void	listen(int) const;
+	super	accept(bool = false, bool = true) const;
+	super	accept(address_type&, bool = false, bool = true) const;
 
-	template<size_t BSIZE>
-	void			read(Buffer<BSIZE> const&, int) = delete;
-	template<size_t BSIZE>
-	size_t			write(Buffer<BSIZE>&, int) = delete;
+	bool	is_listening() const noexcept;
+
+	template<typename C>
+	typename super::streamsize	recv(C const&, typename super::recv_flags) = delete;
+	template<typename C>
+	typename super::streamsize	send(C&, typename super::send_flags) = delete;
 }; // class template acceptor_socket<socket_D>
 
 }; // namespace network

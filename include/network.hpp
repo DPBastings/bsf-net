@@ -12,30 +12,30 @@ namespace network {
 enum class socket_domain {
 	local = AF_LOCAL,
 	ipv4 = AF_INET,
-	// ipv6 = AF_INET6,
-	// bluetooth = AF_BLUETOOTH,
+	ipv6 = AF_INET6,
 }; // enum class socket_domain
 
 enum class socket_type {
 	stream = SOCK_STREAM,
-	// datagram = SOCK_DGRAM,
+	datagram = SOCK_DGRAM,
 	// seq_packet = SOCK_SEQPACKET,
 	// raw = SOCK_RAW,
 	// rdm = SOCK_RDM,
 }; // enum class socket_type
 
+enum class socket_protocol {
+	unspecified = 0,
+}; // enum class socket_protocol
+
 class handle;
 	
-template<socket_domain, socket_type>
+template<socket_domain, socket_type, socket_protocol>
 class socket;
 
 template<socket_domain>
 class address;
 
-template<socket_domain>
-class stream_socket;
-
-template<socket_domain>
+template<socket_domain, socket_type, socket_protocol>
 class acceptor_socket;
 
 template<std::size_t>

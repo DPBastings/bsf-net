@@ -1,8 +1,7 @@
 #ifndef NETPP_SOCKET_HPP
 # define NETPP_SOCKET_HPP
 
-# include <initializer_list>
-# include <stdexcept>
+# include <concepts>
 # include <utility>
 
 # include "network.hpp"
@@ -10,20 +9,31 @@
 
 namespace network {
 
-template<socket_domain D, socket_type T>
+template<socket_domain D>
+concept is_pairable = (D == socket_domain::local /* || D == socket_domain::tipc */);
+
+template<socket_domain D>
+concept is_inet = (D == socket_domain::ipv4 || D == socket_domain::ipv4);
+
+template<socket_domain D, socket_type T, socket_protocol P = socket_protocol::unspecified>
 class socket: public handle {
 public:
 	using address_type = network::address<D>;
-	using streamsize = std::ssize_t;
+	using streamsize = ssize_t;
 	using handle::raw_type;
 
-	enum class option: int {
-		none = 0;
-		nonblock = SOCK_NONBLOCK,
-		cloexec = SOCK_CLOEXEC,
-	}; // enum class option
+	template<int O, typename V>
+	class option_reference;
+
+	template<int O>
+	using bool_option = option_reference<O, bool>;
+	template<int O>
+	using int_option = option_reference<O, int>;
+	template<int O>
+	using time_option = option_reference<O, timeval>;
+
 	enum class recv_flags: int {
-		none = 0;
+		none = 0,
 		close_on_exec = MSG_CMSG_CLOEXEC,
 		dont_wait = MSG_DONTWAIT,
 		error_queue = MSG_ERRQUEUE,
@@ -33,7 +43,7 @@ public:
 		wait_all = MSG_WAITALL,
 	}; // enum class recv_flags
 	enum class send_flags: int {
-		none = 0;
+		none = 0,
 		confirm = MSG_CONFIRM,
 		dont_route = MSG_DONTROUTE,
 		dont_wait = MSG_DONTWAIT,
@@ -44,32 +54,65 @@ public:
 		fast_open = MSG_FASTOPEN,
 	}; // enum class send_flags
 
-	static constexpr socket_domain	domain = D;
-	static constexpr socket_type	type = T;
+	socket(bool = false, bool = true);
 
-	socket(option = option::none, char const* = "");
-	socket(address_type const&, option, char const* = "");
+	socket_domain	domain() const noexcept;
+	socket_type		type() const noexcept;
+	socket_protocol	protocol() const noexcept;
+	address_type	address() const;
+	address_type	peer_address() const;
+	int				error() const noexcept;
 
-	void	bind(address_type const&);
+	bool_option<SO_REUSEADDR>	reuse_address() const noexcept
+		requires is_inet<D>;
+	bool_option<SO_REUSEPORT>	reuse_port() const noexcept
+		requires is_inet<D>;
+	bool_option<SO_DONTROUTE>	dont_route() const noexcept;
+	int_option<SO_INCOMING_CPU>	cpu_affinity() const noexcept;
+	bool_option<SO_KEEPALIVE>	keep_alive() const noexcept;
+	bool_option<SO_OOBINLINE>	inline_oob() const noexcept;
+	int_option<SO_PRIORITY>		priority() const noexcept;
+	int_option<SO_RCVBUF>		recv_buffer_size() const noexcept;
+	int_option<SO_SNDBUF>		send_buffer_size() const noexcept;
+	int_option<SO_RCVLOWAT>		recv_minimum() const noexcept;
+	int_option<SO_SNDLOWAT>		send_minimum() const noexcept;
+	time_option<SO_RCVTIMEO>	recv_timeout() const noexcept;
+	time_option<SO_SNDTIMEO>	send_timeout() const noexcept;
 
-	static std::pair<socket, socket>	make_pair();
+	void		bind(address_type const&) const;
+	void		connect(address_type const&) const;
+	template<typename C>
+	streamsize	send(C const&, send_flags = send_flags::none) const;
+	template<typename C>
+	streamsize	recv(C&, recv_flags = recv_flags::none) const;
 
-	template<contiguous_byte_container C>
-	streamsize	send(BaseBuffer<C> const&, send_flags = send_flags::none) const;
-	template<contiguous_byte_container C>
-	streamsize	recv(Buffer<C>&, recv = recv_flags::none) const;
-
-	address_type	address() const noexcept;
-	bool			listens() const noexcept;
-	int				protocol() const noexcept;
-
-protected:
-	socket(raw_type);
+	static std::pair<socket, socket>	make_pair(bool = false, bool = true) requires is_pairable<D>;
 
 private:
-	static raw_type	make_handle(option, char const*) noexcept;
-	static int		get_protocol(char const*) noexcept;
+	template<int O, typename V>
+	friend class option_reference;
+
+	socket(raw_type);
+
+	static raw_type	make_handle(int);
 }; // class template socket
+
+template<socket_domain D, socket_type T, socket_protocol P>
+template<int O, typename V>
+class socket<D, T, P>::option_reference {
+public:
+	using enclosing = socket<D, T, P>;
+
+	void operator=(V) const noexcept;
+
+	operator V() const noexcept;
+private:
+	friend enclosing;
+
+	option_reference(enclosing::raw_type);
+
+	enclosing::raw_type	_raw_socket;
+}; // class option_reference
 
 }; // namespace network
 

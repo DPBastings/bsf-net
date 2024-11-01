@@ -2,20 +2,20 @@
 # define NETPP_BASE_BUFFER_TPP
 
 # ifndef NETPP_BASE_BUFFER_HPP
-#  error "include in BaseBuffer.hpp"
+#  error "include in basic_socketbuf.hpp"
 # endif // NETPP_BASE_BUFFER_HPP
 
 namespace network {
 
 template<contiguous_byte_container Ctr>
-BaseBuffer<Ctr>::size_type
-BaseBuffer<Ctr>::remaining_capacity() const noexcept {
+basic_socketbuf<Ctr>::size_type
+basic_socketbuf<Ctr>::remaining_capacity() const noexcept {
 	return (capacity() - size());
 }
 
 template<contiguous_byte_container Ctr>
 bool
-BaseBuffer<Ctr>::append(std::u8string_view bytes) {
+basic_socketbuf<Ctr>::append(std::u8string_view bytes) {
 	if (bytes.length() > remaining_capacity()) {
 		return (false);
 	}
@@ -28,7 +28,7 @@ BaseBuffer<Ctr>::append(std::u8string_view bytes) {
 template<contiguous_byte_container Ctr>
 template<contiguous_byte_container Dtr>
 bool
-BaseBuffer<Ctr>::append(BaseBuffer<Dtr> const& that) {
+basic_socketbuf<Ctr>::append(basic_socketbuf<Dtr> const& that) {
 	if (that.length() > remaining_capacity()) {
 		return (false);
 	}

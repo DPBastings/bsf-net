@@ -7,49 +7,60 @@
 
 namespace network {
 
-template<socket_domain D>
-acceptor_socket<D>::acceptor_socket(OptionList opts, char const *prot):
-	stream_socket<D>(opts, prot) {}
+// Basic operations
 
-template<socket_domain D>
-acceptor_socket<D>::acceptor_socket(address const& addr, OptionList opts, char const *prot):
-	stream_socket<D>(addr, opts, prot) {}
-
-template<socket_domain D>
-acceptor_socket<D>::acceptor_socket(int backlog, address const& addr, OptionList opts, char const *prot):
-	stream_socket<D>(addr, opts, prot) {
-	listen(backlog);
+template<socket_domain D, socket_type T, socket_protocol P>
+acceptor_socket<D, T, P>::acceptor_socket(address_type const& addr, bool non_blocking, bool close_on_exec):
+	super(non_blocking, close_on_exec) {
+	this->bind(addr);
 }
 
-template<socket_domain D>
+template<socket_domain D, socket_type T, socket_protocol P>
+acceptor_socket<D, T, P>::acceptor_socket(int backlog, address_type const& addr, bool non_blocking, bool close_on_exec):
+	super(non_blocking, close_on_exec) {
+	this->bind(addr);
+	this->listen(backlog);
+}
+
+// Accessor methods
+
+template<socket_domain D, socket_type T, socket_protocol P>
+bool
+acceptor_socket<D, T, P>::is_listening() const noexcept {
+	return (super::template int_option<SO_ACCEPTCONN>());
+}
+
+// I/O methods
+
+template<socket_domain D, socket_type T, socket_protocol P>
 void
-acceptor_socket<D>::listen(int backlog) const {
-	if (::listen(this->raw(), backlog) == -1) {
-		throw (socketexception("listen"));
+acceptor_socket<D, T, P>::listen(int backlog) const {
+	if (::listen(this->_raw, backlog) == -1) {
+		throw (exception("listen"));
 	}
 }
 
-template<socket_domain D>
-stream_socket<D>
-acceptor_socket<D>::accept() const {
-	handle::raw_type const	raw_handle = ::accept(this->raw(), nullptr, nullptr);
-	
-	if (raw_handle == stream_socket<D>::_invalid_handle)
-		throw (socketexception("accept"));
-	return (stream_socket<D>(raw_handle));
+template<socket_domain D, socket_type T, socket_protocol P>
+typename acceptor_socket<D, T, P>::super
+acceptor_socket<D, T, P>::accept(bool non_blocking, bool close_on_exec) const {
+	address_type	addr;
+
+	return (accept(addr, non_blocking, close_on_exec));
 }
 
-template<socket_domain D>
-stream_socket<D>
-acceptor_socket<D>::accept(typename stream_socket<D>::address& addr) const {
+template<socket_domain D, socket_type T, socket_protocol P>
+typename acceptor_socket<D, T, P>::super
+acceptor_socket<D, T, P>::accept(address_type& addr, bool non_blocking, bool close_on_exec) const {
 	socklen_t			size = addr.size();
-	handle::raw_type const	raw_handle = ::accept(this->raw(), addr.raw(), &size);
+	handle::raw_type 	raw_handle = ::accept4(
+		this->_raw,
+		addr.raw(),
+		&size,
+		(non_blocking ? SOCK_NONBLOCK : 0) | (close_on_exec ? SOCK_CLOEXEC : 0));
 
-	if (raw_handle == stream_socket<D>::_invalid_handle)
-		throw (socketexception("accept"));
-	if (size != addr.size())
-		throw (network::exception("address", "accept"));
-	return (stream_socket<D>(raw_handle));
+	if (raw_handle == handle::_invalid_handle)
+		throw (exception("accept"));
+	return (super(raw_handle));
 }
 
 }; // namespace network

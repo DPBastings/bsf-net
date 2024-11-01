@@ -2,7 +2,7 @@
 # define NETPP_STATIC_BUFFER_HPP
 
 # include "network.hpp"
-# include "BaseBuffer.hpp"
+# include "basic_socketbuf.hpp"
 
 # include <array>
 # include <istream>
@@ -32,7 +32,7 @@ private:
 }; // class StaticBufferContainer
 
 template<size_t SIZE>
-using StaticBuffer = BaseBuffer<StaticBufferContainer<SIZE>>;
+using StaticBuffer = basic_socketbuf<StaticBufferContainer<SIZE>>;
 
 }; // namespace network
 

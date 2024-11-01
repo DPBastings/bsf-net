@@ -17,11 +17,14 @@ public:
 		return (std::basic_string<C>(static_cast<T const&>(*this)));
 	};
 
+	sockaddr*		raw() noexcept {
+		return (static_cast<T*>(this)->raw());
+	};
 	sockaddr const*	raw() const noexcept {
 		return (static_cast<T const*>(this)->raw());
 	};
 	socklen_t		size() const noexcept {
-		return (static_cast<T const*>(this)->raw());
+		return (static_cast<T const*>(this)->size());
 	};
 }; // class basic_address
 
