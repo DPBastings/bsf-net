@@ -72,7 +72,7 @@ socket<D, T, P>::peer_address() const {
 
 template<socket_domain D, socket_type T, socket_protocol P>
 int
-socket<D, T, P>::error() const noexcept {
+socket<D, T, P>::error() const {
 	return (int_option<SO_ERROR>(_raw));
 }
 
@@ -80,79 +80,79 @@ socket<D, T, P>::error() const noexcept {
 
 template<socket_domain D, socket_type T, socket_protocol P>
 typename socket<D, T, P>::template bool_option<SO_REUSEADDR>
-socket<D, T, P>::reuse_address() const noexcept requires is_inet<D> {
+socket<D, T, P>::reuse_address() const requires is_inet<D> {
 	return (bool_option<SO_REUSEADDR>(_raw));
 }
 
 template<socket_domain D, socket_type T, socket_protocol P>
 typename socket<D, T, P>::template bool_option<SO_REUSEPORT>
-socket<D, T, P>::reuse_port() const noexcept requires is_inet<D> {
+socket<D, T, P>::reuse_port() const requires is_inet<D> {
 	return (bool_option<SO_REUSEPORT>(_raw));
 }
 
 template<socket_domain D, socket_type T, socket_protocol P>
 typename socket<D, T, P>::template bool_option<SO_DONTROUTE>
-socket<D, T, P>::dont_route() const noexcept {
+socket<D, T, P>::dont_route() const {
 	return (bool_option<SO_DONTROUTE>(_raw));
 }
 
 template<socket_domain D, socket_type T, socket_protocol P>
 typename socket<D, T, P>:: template int_option<SO_INCOMING_CPU>
-socket<D, T, P>::cpu_affinity() const noexcept {
+socket<D, T, P>::cpu_affinity() const {
 	return (int_option<SO_INCOMING_CPU>(_raw));
 }
 
 template<socket_domain D, socket_type T, socket_protocol P>
 typename socket<D, T, P>:: template bool_option<SO_KEEPALIVE>
-socket<D, T, P>::keep_alive() const noexcept {
+socket<D, T, P>::keep_alive() const {
 	return (bool_option<SO_KEEPALIVE>(_raw));
 }
 
 template<socket_domain D, socket_type T, socket_protocol P>
 typename socket<D, T, P>:: template bool_option<SO_OOBINLINE>
-socket<D, T, P>::inline_oob() const noexcept {
+socket<D, T, P>::inline_oob() const {
 	return (bool_option<SO_OOBINLINE>(_raw));
 }
 
 template<socket_domain D, socket_type T, socket_protocol P>
 typename socket<D, T, P>::template int_option<SO_PRIORITY>
-socket<D, T, P>::priority() const noexcept {
+socket<D, T, P>::priority() const {
 	return (int_option<SO_PRIORITY>(_raw));
 }
 
 template<socket_domain D, socket_type T, socket_protocol P>
 typename socket<D, T, P>::template int_option<SO_RCVBUF>
-socket<D, T, P>::recv_buffer_size() const noexcept {
+socket<D, T, P>::recv_buffer_size() const {
 	return (int_option<SO_RCVBUF>(_raw));
 }
 
 template<socket_domain D, socket_type T, socket_protocol P>
 typename socket<D, T, P>::template int_option<SO_SNDBUF>
-socket<D, T, P>::send_buffer_size() const noexcept {
+socket<D, T, P>::send_buffer_size() const {
 	return (int_option<SO_SNDBUF>(_raw));
 }
 
 template<socket_domain D, socket_type T, socket_protocol P>
 typename socket<D, T, P>::template int_option<SO_RCVLOWAT>
-socket<D, T, P>::recv_minimum() const noexcept {
+socket<D, T, P>::recv_minimum() const {
 	return (int_option<SO_RCVLOWAT>(_raw));
 }
 
 template<socket_domain D, socket_type T, socket_protocol P>
 typename socket<D, T, P>::template int_option<SO_SNDLOWAT>
-socket<D, T, P>::send_minimum() const noexcept {
+socket<D, T, P>::send_minimum() const {
 	return (int_option<SO_SNDLOWAT>(_raw));
 }
 
 template<socket_domain D, socket_type T, socket_protocol P>
 typename socket<D, T, P>::template time_option<SO_RCVTIMEO>
-socket<D, T, P>::recv_timeout() const noexcept {
+socket<D, T, P>::recv_timeout() const {
 	return (time_option<SO_RCVTIMEO>(_raw));
 }
 
 template<socket_domain D, socket_type T, socket_protocol P>
 typename socket<D, T, P>::template time_option<SO_SNDTIMEO>
-socket<D, T, P>::send_timeout() const noexcept {
+socket<D, T, P>::send_timeout() const {
 	return (time_option<SO_SNDTIMEO>(_raw));
 }
 
@@ -255,7 +255,7 @@ socket<D, T, P>::option_reference<O, V>::option_reference(socket::raw_type raw_s
 template<socket_domain D, socket_type T, socket_protocol P>
 template<int O, typename V>
 void
-socket<D, T, P>::option_reference<O, V>::operator=(V optval) const noexcept {
+socket<D, T, P>::option_reference<O, V>::operator=(V optval) const {
 	socklen_t	optlen = sizeof(V);
 
 	if (::setsockopt(_raw_socket, SOL_SOCKET, O, &optval, &optlen) == -1) {
@@ -265,7 +265,7 @@ socket<D, T, P>::option_reference<O, V>::operator=(V optval) const noexcept {
 
 template<socket_domain D, socket_type T, socket_protocol P>
 template<int O, typename V>
-socket<D, T, P>::option_reference<O, V>::operator V() const noexcept {
+socket<D, T, P>::option_reference<O, V>::operator V() const {
 	V			optval;
 	socklen_t	optlen = sizeof(V);
 

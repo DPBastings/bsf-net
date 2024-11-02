@@ -61,23 +61,23 @@ public:
 	socket_protocol	protocol() const noexcept;
 	address_type	address() const;
 	address_type	peer_address() const;
-	int				error() const noexcept;
+	int				error() const;
 
-	bool_option<SO_REUSEADDR>	reuse_address() const noexcept
+	bool_option<SO_REUSEADDR>	reuse_address() const
 		requires is_inet<D>;
-	bool_option<SO_REUSEPORT>	reuse_port() const noexcept
+	bool_option<SO_REUSEPORT>	reuse_port() const
 		requires is_inet<D>;
-	bool_option<SO_DONTROUTE>	dont_route() const noexcept;
-	int_option<SO_INCOMING_CPU>	cpu_affinity() const noexcept;
-	bool_option<SO_KEEPALIVE>	keep_alive() const noexcept;
-	bool_option<SO_OOBINLINE>	inline_oob() const noexcept;
-	int_option<SO_PRIORITY>		priority() const noexcept;
-	int_option<SO_RCVBUF>		recv_buffer_size() const noexcept;
-	int_option<SO_SNDBUF>		send_buffer_size() const noexcept;
-	int_option<SO_RCVLOWAT>		recv_minimum() const noexcept;
-	int_option<SO_SNDLOWAT>		send_minimum() const noexcept;
-	time_option<SO_RCVTIMEO>	recv_timeout() const noexcept;
-	time_option<SO_SNDTIMEO>	send_timeout() const noexcept;
+	bool_option<SO_DONTROUTE>	dont_route() const;
+	int_option<SO_INCOMING_CPU>	cpu_affinity() const;
+	bool_option<SO_KEEPALIVE>	keep_alive() const;
+	bool_option<SO_OOBINLINE>	inline_oob() const;
+	int_option<SO_PRIORITY>		priority() const;
+	int_option<SO_RCVBUF>		recv_buffer_size() const;
+	int_option<SO_SNDBUF>		send_buffer_size() const;
+	int_option<SO_RCVLOWAT>		recv_minimum() const;
+	int_option<SO_SNDLOWAT>		send_minimum() const;
+	time_option<SO_RCVTIMEO>	recv_timeout() const;
+	time_option<SO_SNDTIMEO>	send_timeout() const;
 
 	void		bind(address_type const&) const;
 	void		connect(address_type const&) const;
@@ -103,11 +103,13 @@ class socket<D, T, P>::option_reference {
 public:
 	using enclosing = socket<D, T, P>;
 
-	void operator=(V) const noexcept;
+	void operator=(V) const;
 
-	operator V() const noexcept;
+	operator V() const;
 private:
 	friend enclosing;
+	template<socket_domain, socket_type, socket_protocol>
+	friend class acceptor_socket;
 
 	option_reference(enclosing::raw_type);
 
@@ -116,6 +118,6 @@ private:
 
 }; // namespace network
 
-# include "socket.tpp"
+# include "./socket.tpp"
 
 #endif // NETPP_SOCKET_HPP

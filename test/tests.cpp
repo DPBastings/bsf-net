@@ -19,5 +19,6 @@ TEST_CASE("ipv6 acceptor" "[acceptor ipv6 address]") {
 	network::acceptor_socket<network::socket_domain::ipv6, network::socket_type::stream>	s(addr);
 
 	std::cout << std::string(s.address()) << std::endl;
+	std::cout << s.is_listening() << std::endl;
 	REQUIRE(true);
 }

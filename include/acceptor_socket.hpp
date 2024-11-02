@@ -22,7 +22,7 @@ public:
 	super	accept(bool = false, bool = true) const;
 	super	accept(address_type&, bool = false, bool = true) const;
 
-	bool	is_listening() const noexcept;
+	bool	is_listening() const;
 
 	template<typename C>
 	typename super::streamsize	recv(C const&, typename super::recv_flags) = delete;

@@ -12,22 +12,24 @@ namespace network {
 template<socket_domain D, socket_type T, socket_protocol P>
 acceptor_socket<D, T, P>::acceptor_socket(address_type const& addr, bool non_blocking, bool close_on_exec):
 	super(non_blocking, close_on_exec) {
-	this->bind(addr);
+	super::bind(addr);
 }
 
 template<socket_domain D, socket_type T, socket_protocol P>
 acceptor_socket<D, T, P>::acceptor_socket(int backlog, address_type const& addr, bool non_blocking, bool close_on_exec):
 	super(non_blocking, close_on_exec) {
-	this->bind(addr);
-	this->listen(backlog);
+	super::bind(addr);
+	super::listen(backlog);
 }
 
 // Accessor methods
 
 template<socket_domain D, socket_type T, socket_protocol P>
 bool
-acceptor_socket<D, T, P>::is_listening() const noexcept {
-	return (super::template int_option<SO_ACCEPTCONN>());
+acceptor_socket<D, T, P>::is_listening() const {
+	using option_type = typename super::template bool_option<SO_ACCEPTCONN>;
+
+	return (option_type(this->_raw));
 }
 
 // I/O methods
