@@ -15,7 +15,7 @@ concept is_pairable = (D == socket_domain::local /* || D == socket_domain::tipc 
 template<socket_domain D>
 concept is_inet = (D == socket_domain::ipv4 || D == socket_domain::ipv4);
 
-template<socket_domain D, socket_type T, socket_protocol P = socket_protocol::unspecified>
+template<socket_domain D, socket_type T>
 class socket: public handle {
 public:
 	using address_type = network::address<D>;
@@ -58,7 +58,7 @@ public:
 
 	socket_domain	domain() const noexcept;
 	socket_type		type() const noexcept;
-	socket_protocol	protocol() const noexcept;
+	int				protocol() const noexcept;
 	address_type	address() const;
 	address_type	peer_address() const;
 	int				error() const;
@@ -97,19 +97,18 @@ private:
 	static raw_type	make_handle(int);
 }; // class template socket
 
-template<socket_domain D, socket_type T, socket_protocol P>
+template<socket_domain D, socket_type T>
 template<int O, typename V>
-class socket<D, T, P>::option_reference {
+class socket<D, T>::option_reference {
 public:
-	using enclosing = socket<D, T, P>;
+	using enclosing = socket<D, T>;
 
 	void operator=(V) const;
 
 	operator V() const;
 private:
 	friend enclosing;
-	template<socket_domain, socket_type, socket_protocol>
-	friend class acceptor_socket;
+	friend class acceptor_socket<D, T>;
 
 	option_reference(enclosing::raw_type);
 

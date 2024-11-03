@@ -19,6 +19,7 @@ public:
 	using port_type = in_port_t;
 
 	address(port_type = 0, host_type = IN6ADDR_ANY_INIT);
+	address(char const*);
 
 	template<typename C>
 	operator std::basic_string<C>() const;

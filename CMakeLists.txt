@@ -16,6 +16,7 @@ add_library(
 	source/address_ipv6.cpp
 	source/exception.cpp
 	source/handle.cpp
+	source/misc.cpp
 	source/poller.cpp)
 target_include_directories(
 	netpp-20

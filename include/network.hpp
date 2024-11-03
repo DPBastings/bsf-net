@@ -23,25 +23,18 @@ enum class socket_type {
 	// rdm = SOCK_RDM,
 }; // enum class socket_type
 
-enum class socket_protocol {
-	unspecified = 0,
-}; // enum class socket_protocol
-
 class handle;
 	
-template<socket_domain, socket_type, socket_protocol>
+template<socket_domain, socket_type>
 class socket;
 
 template<socket_domain>
 class address;
 
-template<socket_domain, socket_type, socket_protocol>
+template<socket_domain, socket_type>
 class acceptor_socket;
 
-template<std::size_t>
-class StaticBuffer;
-
-class DynamicBuffer;
+class basic_socketbuf;
 
 class poller;
 

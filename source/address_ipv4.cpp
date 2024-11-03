@@ -1,17 +1,27 @@
 #include "address_ipv4.hpp"
 
-#include <iostream>
-#include <sstream>
-
 using network::address;
 using network::socket_domain;
 
 // Basic operations
 
-address<socket_domain::ipv4>::address(in_port_t port, uint32_t address) {
-	_addr.sin_family = static_cast<int>(socket_domain::ipv4);
-	_addr.sin_port = htons(port);
-	_addr.sin_addr.s_addr = htonl(address);
+address<socket_domain::ipv4>::address(port_type port, host_type host):
+	_addr {
+		.sin_family = static_cast<int>(socket_domain::ipv4),
+		.sin_port = htons(port),
+		.sin_addr {
+		.s_addr = htonl(host),
+		}	
+	} {}
+
+address<socket_domain::ipv4>::address(char const* str, port_type port):
+	_addr {
+		.sin_family = static_cast<int>(socket_domain::ipv4),
+		.sin_port = htons(port),
+	} {
+	if (::inet_aton(str, &_addr.sin_addr) == 0) {
+		throw (exception("inet_aton"));
+	}
 }
 
 // Public methods

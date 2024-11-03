@@ -9,10 +9,10 @@ namespace network {
 template<socket_type T>
 concept is_connection_based = (T == socket_type::stream /* || T == socket_type::seq_packet */);
 
-template<socket_domain D, socket_type T, socket_protocol P = socket_protocol::unspecified>
-class acceptor_socket: public socket<D, T, P> {
+template<socket_domain D, socket_type T>
+class acceptor_socket: public socket<D, T> {
 public:
-	using super = socket<D, T, P>;
+	using super = socket<D, T>;
 	using typename super::address_type;
 
 	acceptor_socket(address_type const&, bool = false, bool = true);
