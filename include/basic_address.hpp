@@ -17,6 +17,10 @@ public:
 		return (std::basic_string<C>(static_cast<T const&>(*this)));
 	};
 
+	auto	host() const noexcept {
+		return (static_cast<T const*>(this)->host());
+	};
+
 	sockaddr*		raw() noexcept {
 		return (static_cast<T*>(this)->raw());
 	};
@@ -26,6 +30,9 @@ public:
 	socklen_t		size() const noexcept {
 		return (static_cast<T const*>(this)->size());
 	};
+	socklen_t&		size() noexcept {
+		return (static_cast<T*>(this)->size());
+	}
 }; // class basic_address
 
 }; // namespace network

@@ -7,16 +7,16 @@ using network::socket_domain;
 
 address<socket_domain::ipv4>::address(port_type port, host_type host):
 	_addr {
-		.sin_family = static_cast<int>(socket_domain::ipv4),
+		.sin_family = static_cast<sa_family_t>(socket_domain::ipv4),
 		.sin_port = htons(port),
 		.sin_addr {
-		.s_addr = htonl(host),
+			.s_addr = htonl(host),
 		}	
 	} {}
 
 address<socket_domain::ipv4>::address(char const* str, port_type port):
 	_addr {
-		.sin_family = static_cast<int>(socket_domain::ipv4),
+		.sin_family = static_cast<sa_family_t>(socket_domain::ipv4),
 		.sin_port = htons(port),
 	} {
 	if (::inet_aton(str, &_addr.sin_addr) == 0) {

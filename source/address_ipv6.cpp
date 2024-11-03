@@ -10,7 +10,7 @@ using network::socket_domain;
 
 address<socket_domain::ipv6>::address(port_type port, host_type host):
 	_addr {
-		.sin6_family = static_cast<int>(socket_domain::ipv6),
+		.sin6_family = static_cast<sa_family_t>(socket_domain::ipv6),
 		.sin6_port = htons(port),
 		.sin6_flowinfo = 0,
 		.sin6_addr = host,

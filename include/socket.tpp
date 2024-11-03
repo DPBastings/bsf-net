@@ -57,11 +57,37 @@ socket<D, T>::address() const {
 	return (addr);
 }
 
+	// Specialization for local (UNIX) sockets
+template<socket_type T>
+auto
+socket<socket_domain::local, T>::address() const {
+	address_type	addr;
+	socklen_t*		asize = addr.size();
+
+	if (::getsockname(_raw, addr.raw(), asize) == -1) {
+		throw (exception("getsockname"));
+	}
+	return (addr);
+}
+
 template<socket_domain D, socket_type T>
 typename socket<D, T>::address_type
 socket<D, T>::peer_address() const {
 	address_type	addr;
 	socklen_t		asize = addr.size();
+
+	if (::getpeername(_raw, addr.raw(), asize) == -1) {
+		throw (exception("getpeername"));
+	}
+	return (addr);
+}
+
+	// Specialization for local (UNIX) sockets
+template<socket_type T>
+typename socket<socket_domain::local, T>::address_type
+socket<socket_domain::local, T>::peer_address() const {
+	address_type	addr;
+	socklen_t*		asize = addr.size();
 
 	if (::getpeername(_raw, addr.raw(), &asize) == -1) {
 		throw (exception("getpeername"));
