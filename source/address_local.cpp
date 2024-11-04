@@ -13,9 +13,10 @@ address<socket_domain::local>::address(char const* path):
 
 address<socket_domain::local>::host_type
 address<socket_domain::local>::host() const noexcept {
-	
+	return ("");
 }
 
 address<socket_domain::local>::subtype
-address<socket_domain::local>::subtype() const noexcept;
-socklen_t	size() const noexcept;
+address<socket_domain::local>::subtype() const noexcept {
+	return (subtype::path);
+}

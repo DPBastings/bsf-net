@@ -27,11 +27,12 @@ public:
 	host_type	host() const noexcept;
 	port_type	port() const noexcept;
 
-	sockaddr*		raw() noexcept;
-	sockaddr const*	raw() const noexcept;
-	socklen_t		size() const noexcept;
-
 private:
+	template<socket_domain, socket_type>
+	friend class socket;
+	template<socket_domain, socket_type>
+	friend class acceptor_socket;
+
 	sockaddr_in6	_addr;
 }; // class address<socket_domain::ipv6>
 

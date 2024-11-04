@@ -20,19 +20,6 @@ public:
 	auto	host() const noexcept {
 		return (static_cast<T const*>(this)->host());
 	};
-
-	sockaddr*		raw() noexcept {
-		return (static_cast<T*>(this)->raw());
-	};
-	sockaddr const*	raw() const noexcept {
-		return (static_cast<T const*>(this)->raw());
-	};
-	socklen_t		size() const noexcept {
-		return (static_cast<T const*>(this)->size());
-	};
-	socklen_t&		size() noexcept {
-		return (static_cast<T*>(this)->size());
-	}
 }; // class basic_address
 
 }; // namespace network

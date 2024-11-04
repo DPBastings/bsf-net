@@ -28,18 +28,3 @@ address<socket_domain::ipv6>::host_type
 address<socket_domain::ipv6>::host() const noexcept {
 	return (_addr.sin6_addr);
 }
-
-sockaddr*
-address<socket_domain::ipv6>::raw() noexcept {
-	return (reinterpret_cast<sockaddr*>(&_addr));
-}
-
-sockaddr const*
-address<socket_domain::ipv6>::raw() const noexcept {
-	return (reinterpret_cast<sockaddr const*>(&_addr));
-}
-
-socklen_t
-address<socket_domain::ipv6>::size() const noexcept {
-	return (sizeof(sockaddr_in6));
-}

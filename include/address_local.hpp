@@ -5,19 +5,23 @@
 # include "./basic_address.hpp"
 
 # include <string_view>
+
+extern "C" {
 # include <sys/un.h>
+}
 
 namespace network {
 
+template<>
 class address<socket_domain::local>: public basic_address<address<socket_domain::local>> {
 public:
 	using host_type = std::basic_string_view<char>;
 	enum class subtype {
 		path,
 		anonymous,
-# ifdef linux
+# ifdef __linux__
 		abstract,
-# endif // linux
+# endif // __linux__
 	}; // enum class subtype
 	
 	address(char const* = "");
@@ -28,23 +32,25 @@ public:
 	host_type	host() const noexcept;
 	subtype		subtype() const noexcept;
 
-	sockaddr*		raw() noexcept;
-	sockaddr const*	raw() const noexcept;
-	socklen_t*		size() noexcept;
-	socklen_t		size() const noexcept;
 private:
-	template<socket_type T>
-	friend class socket<socket_domain::local, T>;
+	template<socket_domain, socket_type>
+	friend class socket;
+	template<socket_domain, socket_type>
+	friend class acceptor_socket;
 
-	static socklen_t	_max_size = 
-# ifdef linux
+	static constexpr socklen_t	_max_size = 
+# ifdef __linux__
 		108;
-# endif // linux
+# else // __linux__
+#  error This platform does not support local sockets.
+# endif // __linux__
 
 	sockaddr_un	_addr;
 	socklen_t	_size;
 }; // class address_local
 
 }; // namespace network
+
+# include "./address_local.ipp"
 
 #endif // NETPP_ADDRESS_LOCAL_HPP

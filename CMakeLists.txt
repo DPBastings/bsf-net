@@ -14,6 +14,7 @@ add_library(
 	netpp-20
 	source/address_ipv4.cpp
 	source/address_ipv6.cpp
+	source/address_local.cpp
 	source/exception.cpp
 	source/handle.cpp
 	source/misc.cpp
