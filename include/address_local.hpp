@@ -30,7 +30,7 @@ public:
 	operator std::basic_string<C>() const;
 
 	host_type	host() const noexcept;
-	subtype		subtype() const noexcept;
+	subtype		subclass() const noexcept;
 
 private:
 	template<socket_domain, socket_type>
