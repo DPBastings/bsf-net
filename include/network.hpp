@@ -15,6 +15,10 @@ enum class socket_domain {
 	ipv6 = AF_INET6,
 }; // enum class socket_domain
 
+template<socket_domain D>
+concept is_inet = (D == socket_domain::ipv4
+	|| D == socket_domain::ipv4);
+
 enum class socket_type {
 	stream = SOCK_STREAM,
 	datagram = SOCK_DGRAM,
@@ -29,7 +33,7 @@ template<socket_domain, socket_type>
 class socket;
 
 template<socket_domain>
-class address;
+class basic_address;
 
 template<socket_domain, socket_type>
 class acceptor_socket;

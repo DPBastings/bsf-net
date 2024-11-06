@@ -1,22 +1,25 @@
-#include "address_local.hpp"
+#include "address.hpp"
 
-using network::address;
-using network::socket_domain;
+using address = network::basic_address<network::socket_domain::local>;
 
-address<socket_domain::local>::address(char const* path):
-	_addr {
-		.sun_family = static_cast<sa_family_t>(socket_domain::local),
+template<>
+address::basic_address(std::string const&):
+	_raw {
+		.sun_family = static_cast<sa_family_t>(domain),
 	},
 	_size(0) {
 
 }
 
-address<socket_domain::local>::host_type
-address<socket_domain::local>::host() const noexcept {
-	return ("");
+template<>
+address::host_type
+address::host() const noexcept {
+	return (""); // todo
 }
 
-address<socket_domain::local>::subtype
-address<socket_domain::local>::subclass() const noexcept {
-	return (subtype::path);
+template<>
+address::subclass_type
+address::subclass() const noexcept
+	requires (network::has_subclass<address::domain>) {
+	return (subclass_type::path); // todo
 }

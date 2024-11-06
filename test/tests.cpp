@@ -1,7 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 #include "socket.hpp"
-#include "address_ipv4.hpp"
-#include "address_ipv6.hpp"
+#include "address.hpp"
 #include "acceptor_socket.hpp"
 
 #include <iostream>
@@ -10,14 +9,14 @@
 #include <netdb.h>
 
 TEST_CASE("address ipv4") {
-	using address = network::address<network::socket_domain::ipv4>;
+	using address = network::basic_address<network::socket_domain::ipv4>;
 
 	address	a0;
-	address	a1 {443};
-	address	a2 {"192.168.0.0", 443};
+	address	a1 {address::default_host, 443};
+	address	a2 {"192.168.0.0"};
 	REQUIRE(std::string(a0) == "0.0.0.0:0");
 	REQUIRE(std::string(a1) == "0.0.0.0:443");
-	REQUIRE(std::string(a2) == "192.168.0.0:443");
+	REQUIRE(std::string(a2) == "192.168.0.0:0");
 }
 
 TEST_CASE("ipv4 socket default address", "[socket ipv4 address]") {
@@ -47,7 +46,8 @@ TEST_CASE("ipv4 udp socket protocol", "[socket ipv4 udp protocol]") {
 }
 
 TEST_CASE("ipv6 acceptor" "[acceptor ipv6 address]") {
-	network::address<network::socket_domain::ipv6>	addr(1100);
+	using address = network::basic_address<network::socket_domain::ipv6>;
+	address	addr(address::default_host, 1100);
 	network::acceptor_socket<network::socket_domain::ipv6, network::socket_type::stream>	s(addr);
 
 	REQUIRE(std::string(s.address()) == "[0:0:0:0:0:0:0:0]:1100");

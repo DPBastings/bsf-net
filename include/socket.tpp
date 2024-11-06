@@ -48,52 +48,14 @@ socket<D, T>::protocol() const noexcept {
 template<socket_domain D, socket_type T>
 typename socket<D, T>::address_type
 socket<D, T>::address() const {
-	address_type	addr;
-	socklen_t		asize = addr.size();
-
-	if (::getsockname(_raw, addr.raw(), &asize) == -1) {
-		throw (exception("getsockname"));
-	}
-	return (addr);
+	return (address_type(*this));
 }
 
-	// Specialization for local (UNIX) sockets
-template<socket_type T>
-typename socket<socket_domain::local, T>::address_type
-socket<socket_domain::local, T>::address() const {
-	address_type	addr;
-	socklen_t&		asize = addr.size();
-
-	if (::getsockname(_raw, addr.raw(), asize) == -1) {
-		throw (exception("getsockname"));
-	}
-	return (addr);
+template<socket_domain D, socket_type T>
+typename socket<D, T>::address_type
+socket<D, T>::peer_address() const {
+	return (address_type(*this, 0));
 }
-
-// template<socket_domain D, socket_type T>
-// typename socket<D, T>::address_type
-// socket<D, T>::peer_address() const {
-// 	address_type	addr;
-// 	socklen_t		asize = addr.size();
-
-// 	if (::getpeername(_raw, addr.raw(), asize) == -1) {
-// 		throw (exception("getpeername"));
-// 	}
-// 	return (addr);
-// }
-
-// 	// Specialization for local (UNIX) sockets
-// template<socket_type T>
-// typename socket<socket_domain::local, T>::address_type
-// socket<socket_domain::local, T>::peer_address() const {
-// 	address_type	addr;
-// 	socklen_t*		asize = addr.size();
-
-// 	if (::getpeername(_raw, addr.raw(), &asize) == -1) {
-// 		throw (exception("getpeername"));
-// 	}
-// 	return (addr);
-// }
 
 template<socket_domain D, socket_type T>
 int
@@ -186,7 +148,7 @@ socket<D, T>::send_timeout() const {
 template<socket_domain D, socket_type T>
 void
 socket<D, T>::bind(address_type const& addr) const {
-	if (::bind(_raw, addr.raw(), addr.size()) == -1) {
+	if (::bind(_raw, addr.raw_ptr(), addr.size()) == -1) {
 		throw (exception("bind"));
 	}
 }
@@ -194,7 +156,7 @@ socket<D, T>::bind(address_type const& addr) const {
 template<socket_domain D, socket_type T>
 void
 socket<D, T>::connect(address_type const& addr) const {
-	if (::connect(_raw, addr.raw(), addr.size() == -1)) {
+	if (::connect(_raw, addr.raw_ptr(), addr.size() == -1)) {
 		throw (exception("connect"));
 	}
 }
@@ -257,6 +219,18 @@ socket<D, T>::make_handle(int opts) {
 		throw (exception("socket"));
 	}
 	return (raw);
+}
+
+template<socket_domain D, socket_type T>
+typename socket<D, T>::raw_type&
+socket<D, T>::raw() noexcept {
+	return (_raw);
+}
+
+template<socket_domain D, socket_type T>
+typename socket<D, T>::raw_type
+socket<D, T>::raw() const noexcept {
+	return (_raw);
 }
 
 /* Socket option reference */

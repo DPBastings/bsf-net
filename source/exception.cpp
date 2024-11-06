@@ -1,6 +1,7 @@
 #include "network.hpp"
 
 #include <cerrno>
+#include <cstring>
 
 extern int errno;
 

@@ -11,7 +11,6 @@ FetchContent_MakeAvailable(Catch2)
 add_executable(netpp-20-tests
 	tests.cpp
 )
-
 target_include_directories(
 	netpp-20-tests
 	PUBLIC

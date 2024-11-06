@@ -27,5 +27,10 @@ target_compile_features(
 	netpp-20
 	PUBLIC
 	cxx_std_20)
+target_compile_options(
+	netpp-20
+	PUBLIC
+	-Wall -Wextra -Werror -g
+)
 
 add_subdirectory(test)

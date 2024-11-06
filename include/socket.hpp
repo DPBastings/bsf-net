@@ -12,13 +12,10 @@ namespace network {
 template<socket_domain D>
 concept is_pairable = (D == socket_domain::local /* || D == socket_domain::tipc */);
 
-template<socket_domain D>
-concept is_inet = (D == socket_domain::ipv4 || D == socket_domain::ipv4);
-
 template<socket_domain D, socket_type T>
 class socket: public handle {
 public:
-	using address_type = network::address<D>;
+	using address_type = network::basic_address<D>;
 	using streamsize = ssize_t;
 	using handle::raw_type;
 
@@ -89,12 +86,17 @@ public:
 	static std::pair<socket, socket>	make_pair(bool = false, bool = true) requires is_pairable<D>;
 
 private:
+	friend class basic_address<D>;
+
 	template<int O, typename V>
 	friend class option_reference;
 
 	socket(raw_type);
 
 	static raw_type	make_handle(int);
+
+	raw_type&	raw() noexcept;
+	raw_type	raw() const noexcept;
 }; // class template socket
 
 template<socket_domain D, socket_type T>
