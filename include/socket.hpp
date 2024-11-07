@@ -13,7 +13,7 @@ template<socket_domain D>
 concept is_pairable = (D == socket_domain::local /* || D == socket_domain::tipc */);
 
 template<socket_domain D, socket_type T>
-class socket: public handle {
+class basic_socket: public handle {
 public:
 	using address_type = network::basic_address<D>;
 	using streamsize = ssize_t;
@@ -51,7 +51,7 @@ public:
 		fast_open = MSG_FASTOPEN,
 	}; // enum class send_flags
 
-	socket(bool = false, bool = true);
+	basic_socket(bool = false, bool = true);
 
 	socket_domain	domain() const noexcept;
 	socket_type		type() const noexcept;
@@ -83,7 +83,7 @@ public:
 	template<typename C>
 	streamsize	recv(C&, recv_flags = recv_flags::none) const;
 
-	static std::pair<socket, socket>	make_pair(bool = false, bool = true) requires is_pairable<D>;
+	static std::pair<basic_socket, basic_socket>	make_pair(bool = false, bool = true) requires is_pairable<D>;
 
 private:
 	friend class basic_address<D>;
@@ -91,7 +91,7 @@ private:
 	template<int O, typename V>
 	friend class option_reference;
 
-	socket(raw_type);
+	basic_socket(raw_type);
 
 	static raw_type	make_handle(int);
 
@@ -101,16 +101,16 @@ private:
 
 template<socket_domain D, socket_type T>
 template<int O, typename V>
-class socket<D, T>::option_reference {
+class basic_socket<D, T>::option_reference {
 public:
-	using enclosing = socket<D, T>;
+	using enclosing = basic_socket<D, T>;
 
 	void operator=(V) const;
 
 	operator V() const;
 private:
 	friend enclosing;
-	friend class acceptor_socket<D, T>;
+	friend class basic_acceptor_socket<D, T>;
 
 	option_reference(enclosing::raw_type);
 

@@ -16,27 +16,26 @@ enum class socket_domain {
 }; // enum class socket_domain
 
 template<socket_domain D>
-concept is_inet = (D == socket_domain::ipv4
-	|| D == socket_domain::ipv4);
+concept is_inet = (D == socket_domain::ipv4 || D == socket_domain::ipv6);
 
 enum class socket_type {
 	stream = SOCK_STREAM,
 	datagram = SOCK_DGRAM,
-	// seq_packet = SOCK_SEQPACKET,
-	// raw = SOCK_RAW,
-	// rdm = SOCK_RDM,
+	seq_packet = SOCK_SEQPACKET,
+	raw = SOCK_RAW,
+	rdm = SOCK_RDM,
 }; // enum class socket_type
 
 class handle;
 	
 template<socket_domain, socket_type>
-class socket;
+class basic_socket;
 
 template<socket_domain>
 class basic_address;
 
 template<socket_domain, socket_type>
-class acceptor_socket;
+class basic_acceptor_socket;
 
 class basic_socketbuf;
 

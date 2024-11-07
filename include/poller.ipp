@@ -5,8 +5,6 @@
 #  error "include in network/poller.hpp"
 # endif // NETPP_POLLER_HPP
 
-# include "utils.tpp"
-
 # include <algorithm>
 
 namespace network {

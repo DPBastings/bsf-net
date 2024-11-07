@@ -28,7 +28,7 @@ public:
 
 private:
 	template<socket_domain D, socket_type T>
-	friend class socket;
+	friend class basic_socket;
 	friend class poller;
 
 	raw_type	_raw;
