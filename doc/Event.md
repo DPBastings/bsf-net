@@ -1,18 +1,18 @@
-# Event
+# event
 ```cpp
-class Poller::Event
+class poller::event
 ```
-Class representing an I/O event that can occur on a Handle and be detected by a Poller.
+Class representing an I/O event that can occur on a handle and be detected by a poller.
 ## Methods
 ### Accessors
 #### happened
 ```cpp
-bool	Event::happened(EventType event) const noexcept;
+bool	event::happened(event_type event) const noexcept;
 ```
 Return whether an event of type `event` has occurred.
 #### handle
 ```cpp
-SharedHandle	Event::handle() const noexcept;
+Sharedhandle	event::handle() const noexcept;
 ```
 Return the handle on which the event(s) occurred.
 ##### Notes

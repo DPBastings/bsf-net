@@ -1,7 +1,7 @@
 # Network
 ## Preface
 
-### Socket
+### socket
 ```cpp
-class network::Socket: public Handle;
+class network::socket: public handle;
 ```

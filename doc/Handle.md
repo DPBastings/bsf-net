@@ -1,30 +1,30 @@
-# Handle
+# handle
 ```cpp
-class network::Handle
+class network::handle
 ```
 A class that serves as a wrapper around the humble Unix file descriptor, mainly managing its lifetime.
 
 ## Associated types
-- `SharedHandle`
-A reference to a Handle of which the ownership is shared amongst several scopes. This type is mainly used in the context of the `Poller`.
+- `Sharedhandle`
+A reference to a handle of which the ownership is shared amongst several scopes. This type is mainly used in the context of the `poller`.
 
 ## Member types
-- `Exception`	Exception that can be thrown when a lower-level operation on the file descriptor fails (e.g. where C-style `open()` would return -1 on failure, the Handle will throw a `Handle::Exception`).
-- `Raw`	The type of the underlying file descriptor: equates `int`.
+- `exception`	exception that can be thrown when a lower-level operation on the file descriptor fails (e.g. where C-style `open()` would return -1 on failure, the handle will throw a `handle::exception`).
+- `raw_type`	The type of the underlying file descriptor: equates `int`.
 
 ## Member constants
-- `static constexpr Raw	_invalid_handle = -1;`
+- `static constexpr raw_type	_invalid_handle = -1;`
 
 ## Methods
 ### Constructors
 ```cpp
-Handle();                                  // 1
-virtual ~Handle();                         // 2
-Handle(Raw fd);                            // 3
-Handle(Handle const& that);                // 4
-Handle(Handle&& that) noexcept;            // 5
-Handle&	operator=(Handle const& that);	   // 6
-Handle&	operator=(Handle&& that) noexcept; // 7
+handle();                                  // 1
+virtual ~handle();                         // 2
+handle(raw_type fd);                            // 3
+handle(handle const& that);                // 4
+handle(handle&& that) noexcept;            // 5
+handle&	operator=(handle const& that);	   // 6
+handle&	operator=(handle&& that) noexcept; // 7
 ```
 1. Default constructor: initialize the underlying file descriptor to `_invalid_handle`.
 2. Destructor: `close()` the underlying file descriptor.
@@ -38,20 +38,20 @@ Handle&	operator=(Handle&& that) noexcept; // 7
 All other methods are `protected`.
 #### raw
 ```cpp
-Handle::Raw	Handle::raw() const noexcept;
+handle::raw_type	handle::raw() const noexcept;
 ```
 Return the raw file descriptor.
 #### close
 ```cpp
-void	Handle::close();
+void	handle::close();
 ```
 Release the underlying file descriptor and close it.
-##### Exceptions
-- `Handle::Exception` on failure of `close()`.
+##### exceptions
+- `handle::exception` on failure of `close()`.
 
 #### release
 ```cpp
-Handle::Raw	Handle::release() noexcept;
+handle::raw_type	handle::release() noexcept;
 ```
 Release the underlying file descriptor and return it to the caller.
 

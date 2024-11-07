@@ -1,64 +1,59 @@
-#ifndef NETWORK_HPP
-# define NETWORK_HPP
+#ifndef NETPP_HPP
+# define NETPP_HPP
 
 # include <cstddef>
 # include <stdexcept>
 
-extern "C" {
 # include <sys/socket.h>
 # include <sys/types.h>
-}
 
 namespace network {
-	using std::size_t;
 
-	enum class Domain {
-		unix = AF_UNIX,
-		local = AF_LOCAL,
-		ipv4 = AF_INET,
-		ipv6 = AF_INET6,
-		bluetooth = AF_BLUETOOTH,
-	}; // enum class Domain
+enum class socket_domain {
+	local = AF_LOCAL,
+	ipv4 = AF_INET,
+	ipv6 = AF_INET6,
+}; // enum class socket_domain
 
-	enum class Type {
-		stream = SOCK_STREAM,
-		datagram = SOCK_DGRAM,
-		seq_packet = SOCK_SEQPACHET,
-		raw = SOCK_RAW,
-		rdm = SOCK_RDM,
-	}; // enum class Type
+template<socket_domain D>
+concept is_inet = (D == socket_domain::ipv4
+	|| D == socket_domain::ipv4);
 
-	class Handle;
-		
-	template<Domain, Type>
-	class Socket;
+enum class socket_type {
+	stream = SOCK_STREAM,
+	datagram = SOCK_DGRAM,
+	// seq_packet = SOCK_SEQPACKET,
+	// raw = SOCK_RAW,
+	// rdm = SOCK_RDM,
+}; // enum class socket_type
 
-	template<Domain>
-	class Address;
-
-	template<Domain>
-	class StreamSocket;
-
-	template<Domain>
-	class Acceptor;
-
-	template<size_t>
-	class StaticBuffer;
-
-	class DynamicBuffer;
+class handle;
 	
-	class Poller;
+template<socket_domain, socket_type>
+class socket;
 
-	class Exception {
-	public:
-		Exception(char const*);
+template<socket_domain>
+class basic_address;
 
-		int	errno() const noexcept;
+template<socket_domain, socket_type>
+class acceptor_socket;
 
-	private:
-		char const*	_msg;
-		int			_errno;
-	}; // class Exception
+class basic_socketbuf;
+
+class poller;
+
+class exception: public std::exception {
+public:
+	exception(char const* = "") noexcept;
+
+	char const*	what() const noexcept;
+	int			error() const noexcept;
+
+private:
+	char const*	_msg;
+	int			_errno;
+}; // class exception
+
 }; // namespace network
 
-#endif // NETWORK_HPP
+#endif // NETPP_HPP

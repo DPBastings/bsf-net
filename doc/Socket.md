@@ -1,68 +1,68 @@
-# Socket
+# socket
 ```cpp
-template<network::Domain DOMAIN, network::Type TYPE>
-class network::Socket: public Handle
+template<network::socket_domain DOMAIN, network::socket_typeYPE>
+class network::socket: public handle
 ```
 Class representing a network socket belonging to a particular `DOMAIN` and conforming to a particular `TYPE`.
 
 ## Associated types
-- `enum class Domain`
-The socket's communication domain. Possible values:
+- `enum class socket_domain`
+The socket's communication socket_domain. Possible values:
 	- `ipv4`;
 	- `local`;
-- `enum class Type`
+- `enum class type`
 The socket's type. Possible values:
 	- `stream`;
-- `enum class SocketOption`
+- `enum class socketOption`
 Miscellaneous options to be set on the socket's file descriptor. Possible values:
 	- `nonblock`;
 	- `cloexec`;
-- `SocketException`	Exception that can be thrown when a lower-level operation on the socket descriptor fails (e.g. where C-style `socket()` would return -1 on failure, the Socket will throw a `SocketException`).
+- `socketexception`	exception that can be thrown when a lower-level operation on the socket descriptor fails (e.g. where C-style `socket()` would return -1 on failure, the socket will throw a `socketexception`).
 
 ## Member types
-- `Address`
-The address type associated with this kind of socket. Equates `network::Address<DOMAIN>`.
+- `address`
+The address type associated with this kind of socket. Equates `network::address<DOMAIN>`.
 - `OptionList`
-Aggregate type containing an arbitrary number of `SocketOption`s.
+Aggregate type containing an arbitrary number of `socketOption`s.
 
 ## Methods
 ### Constructors
 ```cpp
-Socket<DOMAIN, TYPE>::Socket(OptionList opts, char const* prot = ""); // 1
+socket<DOMAIN, TYPE>::socket(OptionList opts, char const* prot = ""); // 1
 ```
 1. Initialize the socket descriptor by way of a call to `socket()`. Note that `prot` is passed to `getprotobyname()` to retrieve the protocol number.
-##### Exceptions
+##### exceptions
 1. 
-	- `Socket::Exception` if `prot` does not denote a valid protocol.
-	- `Socket::Exception` on failure of `socket()`.
+	- `socket::exception` if `prot` does not denote a valid protocol.
+	- `socket::exception` on failure of `socket()`.
 ### Manipulators
 #### bind
 ```cpp
-void	Socket<DOMAIN, TYPE>::bind(Address const& addr);
+void	socket<DOMAIN, TYPE>::bind(address const& addr);
 ```
 Bind this socket to local address `addr`.
-##### Exceptions
-- `SocketException` on failure of `bind()`.
+##### exceptions
+- `socketexception` on failure of `bind()`.
 #### write
 ```cpp
 template<size_t BSIZE>
-size_t	Socket<DOMAIN, TYPE>::write(Buffer<BSIZE> const& buf, int flags = 0);
+size_t	socket<DOMAIN, TYPE>::write(Buffer<BSIZE> const& buf, int flags = 0);
 ```
 Write the contents of `buf` to this socket.
-##### Exceptions
-- `SocketException` on failure of `send()`.
+##### exceptions
+- `socketexception` on failure of `send()`.
 #### read
 ```cpp
 template<size_t BSIZE>
-void	Socket<DOMAIN, TYPE>::read(Buffer<BSIZE>& buf, int flags = 0);
+void	socket<DOMAIN, TYPE>::read(Buffer<BSIZE>& buf, int flags = 0);
 ```
 Read from this socket into `buf`.
-##### Exceptions
-- `SocketException` on failure of `recv()`.
+##### exceptions
+- `socketexception` on failure of `recv()`.
 ### Accessors
 #### address
 ```cpp
-Socket<DOMAIN, TYPE>::Address	Socket<DOMAIN, TYPE>::address() const noexcept;
+socket<DOMAIN, TYPE>::address	socket<DOMAIN, TYPE>::address() const noexcept;
 ```
 Return the address to which this socket has been bound.
 ##### Notes

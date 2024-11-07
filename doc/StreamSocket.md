@@ -1,7 +1,7 @@
-# StreamSocket
+# stream_socket
 ```cpp
-template<network::Domain DOMAIN>
-class network::StreamSocket: public network::Socket<DOMAIN, Type::stream>;
+template<network::socket_domain DOMAIN>
+class network::stream_socket: public network::socket<DOMAIN, type::stream>;
 ```
-Partial specialization of the base Socket.
-This is the socket type that will be created by an Acceptor's `accept()` method.
+Partial specialization of the base socket.
+This is the socket type that will be created by an acceptor_socket's `accept()` method.
