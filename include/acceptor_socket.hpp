@@ -10,13 +10,13 @@ template<socket_type T>
 concept is_connection_based = (T == socket_type::stream /* || T == socket_type::seq_packet */);
 
 template<socket_domain D, socket_type T>
-class acceptor_socket: public socket<D, T> {
+class basic_acceptor_socket: public basic_socket<D, T> {
 public:
-	using super = socket<D, T>;
+	using super = basic_socket<D, T>;
 	using typename super::address_type;
 
-	acceptor_socket(address_type const&, bool = false, bool = true);
-	acceptor_socket(int, address_type const&, bool = false, bool = true);
+	basic_acceptor_socket(address_type const&, bool = false, bool = true);
+	basic_acceptor_socket(int, address_type const&, bool = false, bool = true);
 
 	void	listen(int) const;
 	super	accept(bool = false, bool = true) const;

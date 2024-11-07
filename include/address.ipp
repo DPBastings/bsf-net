@@ -11,18 +11,18 @@ namespace network {
 
 template<socket_domain D>
 template<socket_type T>
-basic_address<D>::basic_address(socket<D, T> const& s):
+basic_address<D>::basic_address(basic_socket<D, T> const& s):
 	_size(_max_size) {
-	if (::getsockname(s.raw(), reinterpret_cast<sockaddr*>(&_raw), &_size) == -1) {
+	if (::getsockname(s.raw(), raw_ptr(), &_size) == -1) {
 		throw (exception("getsockname"));
 	}
 }
 
 template<socket_domain D>
 template<socket_type T>
-basic_address<D>::basic_address(socket<D, T> const& s, int):
+basic_address<D>::basic_address(basic_socket<D, T> const& s, int):
 	_size(_max_size) {
-	if (::getpeername(s.raw(), reinterpret_cast<sockaddr*>(&_raw), &_size) == -1) {
+	if (::getpeername(s.raw(), raw_ptr(), &_size) == -1) {
 		throw (exception("getpeername"));
 	}
 }

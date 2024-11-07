@@ -52,9 +52,9 @@ public:
 		requires (has_port<D>);
 	basic_address(std::string const&);
 	template<socket_type T>
-	basic_address(socket<D, T> const&);
+	basic_address(basic_socket<D, T> const&);
 	template<socket_type T>
-	basic_address(socket<D, T> const&, int);
+	basic_address(basic_socket<D, T> const&, int);
 
 	template<typename C>
 	operator std::basic_string<C>() const;
@@ -69,9 +69,9 @@ public:
 
 private:
 	template<socket_domain, socket_type T>
-	friend class socket;
+	friend class basic_socket;
 	template<socket_domain, socket_type T>
-	friend class acceptor_socket;
+	friend class basic_acceptor_socket;
 
 	sockaddr*		raw_ptr() noexcept;
 	sockaddr const*	raw_ptr() const noexcept;

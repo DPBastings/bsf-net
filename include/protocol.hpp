@@ -3,8 +3,6 @@
 
 namespace network {
 
-
-
 }; // namespace network
 
 #endif // NETPP_PROTOCOL_HPP
