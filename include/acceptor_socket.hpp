@@ -7,7 +7,7 @@
 namespace network {
 
 template<socket_type T>
-concept is_connection_based = (T == socket_type::stream /* || T == socket_type::seq_packet */);
+concept is_connection_based = (T == socket_type::stream || T == socket_type::seq_packet);
 
 template<socket_domain D, socket_type T>
 class basic_acceptor_socket: public basic_socket<D, T> {

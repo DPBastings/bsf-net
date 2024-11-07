@@ -12,6 +12,16 @@ namespace network {
 template<socket_domain D>
 concept is_pairable = (D == socket_domain::local /* || D == socket_domain::tipc */);
 
+template<typename T>
+concept contiguous_container = requires(T t) {
+	t.data();
+	t.size();
+};
+
+template<typename T>
+concept iobuf = std::is_same_v<typename T::value_type, char>
+	&& contiguous_container<T>;
+
 template<socket_domain D, socket_type T>
 class basic_socket: public handle {
 public:
@@ -78,10 +88,10 @@ public:
 
 	void		bind(address_type const&) const;
 	void		connect(address_type const&) const;
-	template<typename C>
-	streamsize	send(C const&, send_flags = send_flags::none) const;
-	template<typename C>
-	streamsize	recv(C&, recv_flags = recv_flags::none) const;
+	template<iobuf B>
+	streamsize	send(B const&, send_flags = send_flags::none) const;
+	template<iobuf B>
+	streamsize	recv(B&, recv_flags = recv_flags::none) const;
 
 	static std::pair<basic_socket, basic_socket>	make_pair(bool = false, bool = true) requires is_pairable<D>;
 
@@ -116,6 +126,11 @@ private:
 
 	enclosing::raw_type	_raw_socket;
 }; // class option_reference
+
+using ipv4_tcp_socket = basic_socket<socket_domain::ipv4, socket_type::stream>;
+using ipv4_udp_socket = basic_socket<socket_domain::ipv4, socket_type::datagram>;
+using ipv6_tcp_socket = basic_socket<socket_domain::ipv6, socket_type::stream>;
+using ipv6_udp_socket = basic_socket<socket_domain::ipv6, socket_type::datagram>;
 
 }; // namespace network
 

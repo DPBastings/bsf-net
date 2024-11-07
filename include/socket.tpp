@@ -160,9 +160,9 @@ basic_socket<D, T>::connect(address_type const& addr) const {
 }
 
 template<socket_domain D, socket_type T>
-template<typename C>
+template<iobuf B>
 typename basic_socket<D, T>::streamsize
-basic_socket<D, T>::send(C const& buf, send_flags flags) const {
+basic_socket<D, T>::send(B const& buf, send_flags flags) const {
 	streamsize const	len = ::send(_raw, buf.data(), buf.size(), flags);
 
 	if (is_open() && len == -1) {
@@ -172,9 +172,9 @@ basic_socket<D, T>::send(C const& buf, send_flags flags) const {
 }
 
 template<socket_domain D, socket_type T>
-template<typename C>
+template<iobuf B>
 typename basic_socket<D, T>::streamsize
-basic_socket<D, T>::recv(C& buf, recv_flags flags) const {
+basic_socket<D, T>::recv(B& buf, recv_flags flags) const {
 	streamsize const	len = ::recv(_raw, buf.data(), buf.size(), flags);
 
 	if (is_open() && len == -1) {
