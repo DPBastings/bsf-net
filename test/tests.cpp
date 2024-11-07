@@ -60,6 +60,6 @@ TEST_CASE("resolver", "[resolver]") {
 	resolver	r("example.com", "https");
 
 	for (auto const& a: r) {
-		std::cout << std::string(a) << std::endl;
+		std::cout << std::string(a.address) << std::endl;
 	}
 }

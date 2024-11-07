@@ -98,7 +98,7 @@ basic_address_info<D, T>::cend() const noexcept {
 template<socket_domain D, socket_type T>
 basic_address_info<D, T>::hint_t::hint_t(int flags):
 	data {
-		.ai_flags = flags,
+		.ai_flags = flags | AI_CANONNAME,
 		.ai_family = static_cast<int>(D),
 		.ai_socktype = static_cast<int>(T),
 		.ai_protocol = 0,
@@ -135,9 +135,12 @@ basic_address_info<D, T>::iterator::operator++(int) noexcept {
 }
 
 template<socket_domain D, socket_type T>
-typename basic_address_info<D,T>::address_type
+typename basic_address_info<D,T>::result_type
 basic_address_info<D, T>::iterator::operator*() const noexcept {
-	return (address_type(reinterpret_cast<typename address_type::storage_type const*>(_ptr->ai_addr)));
+	return (result_type {
+		reinterpret_cast<typename address_type::storage_type const*>(_ptr->ai_addr),
+		_ptr->ai_canonname
+	});
 }
 
 } // namespace network

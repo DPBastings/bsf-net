@@ -22,6 +22,7 @@ public:
 		passive = AI_PASSIVE,
 		canonical_name = AI_CANONNAME,
 	}; // enum class flags
+	struct result_type;
 	class iterator;
 	using const_iterator = iterator;
 	using address_type = basic_address<D>;
@@ -59,6 +60,12 @@ private:
 }; // class basic_address_info<D, T>
 
 template<socket_domain D, socket_type T>
+struct basic_address_info<D, T>::result_type {
+	address_type		address;
+	std::string_view	canonical_name;
+}; // struct basic_address_info<D, T>::result_type
+
+template<socket_domain D, socket_type T>
 class basic_address_info<D, T>::iterator {
 public:
 	using enclosing = basic_address_info<D, T>;
@@ -68,7 +75,7 @@ public:
 	iterator&	operator++() noexcept;
 	iterator	operator++(int) noexcept;
 
-	address_type	operator*() const noexcept;
+	result_type	operator*() const noexcept;
 private:
 	friend enclosing;
 	iterator(addrinfo const*);
