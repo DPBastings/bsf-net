@@ -26,6 +26,17 @@ address::basic_address(std::string const& str):
 	}
 }
 
+// template<>
+// address::basic_address(storage_type const* raw)
+// 	requires internet_domain<address::domain>:
+// 	_raw {
+// 		.sin_family = raw->sin_family,
+// 		.sin_port = raw->sin_port,
+// 		.sin_addr {
+// 			.s_addr = raw->sin_addr.s_addr;
+// 		}
+// 	} {}
+
 // Public methods
 
 template<>

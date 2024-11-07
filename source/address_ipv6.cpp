@@ -15,6 +15,18 @@ address::basic_address(host_type host, port_type port)
 		.sin6_scope_id = 0,
 	} {}
 
+// template<>
+// address::basic_address(storage_type const* raw)
+// 	requires internet_domain<address::domain>:
+// 	_raw {
+// 		.sin6_family = raw->sin6_family,
+// 		.sin6_port = raw->sin6_port,
+// 		.sin6_flowinfo = raw->sin6_flowinfo,
+// 		.sin6_addr {
+// 			.s_addr = raw->sin6_addr.s_addr;
+// 		}
+// 	} {}
+
 // Public methods
 
 template<>

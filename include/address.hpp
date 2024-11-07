@@ -1,5 +1,5 @@
-#ifndef NETPP_BASIC_SOCKET_ADDRESS_HPP
-# define NETPP_BASIC_SOCKET_ADDRESS_HPP
+#ifndef NETPP_ADDRESS_HPP
+# define NETPP_ADDRESS_HPP
 
 # include "network.hpp"
 
@@ -69,9 +69,14 @@ public:
 
 private:
 	template<socket_domain, socket_type T>
+	friend class basic_address_info;
+	template<socket_domain, socket_type T>
 	friend class basic_socket;
 	template<socket_domain, socket_type T>
 	friend class basic_acceptor_socket;
+
+	basic_address(storage_type const*)
+		requires internet_domain<D>;
 
 	sockaddr*		raw_ptr() noexcept;
 	sockaddr const*	raw_ptr() const noexcept;
@@ -92,6 +97,7 @@ struct address_traits<socket_domain::ipv4> {
 	using subclass_type = void_type;
 
 	static constexpr host_type	default_host = INADDR_ANY;
+	static constexpr host_type	loopback_host = INADDR_LOOPBACK;
 }; // struct address_traits<socket_domain::ipv4>
 
 template<>
@@ -102,6 +108,7 @@ struct address_traits<socket_domain::ipv6> {
 	using subclass_type = void_type;
 
 	static constexpr host_type	default_host = IN6ADDR_ANY_INIT;
+	static constexpr host_type	loopback_host = IN6ADDR_LOOPBACK_INIT;
 }; // struct address_traits<socket_domain::ipv6>
 
 template<>
@@ -124,4 +131,4 @@ struct address_traits<socket_domain::local> {
 
 # include "./address.ipp"
 
-#endif // NETPP_BASIC_SOCKET_ADDRESS_HPP
+#endif // NETPP_ADDRESS_HPP

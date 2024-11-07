@@ -1,6 +1,7 @@
-#ifndef NETPP_BASIC_ADDRESS_IPP
-# define NETPP_BASIC_ADDRESS_IPP
+#ifndef NETPP_ADDRESS_IPP
+# define NETPP_ADDRESS_IPP
 
+# include <cstring>
 # include <sstream>
 
 // todo: make the _size member static constexpr for socket address
@@ -25,6 +26,12 @@ basic_address<D>::basic_address(basic_socket<D, T> const& s, int):
 	if (::getpeername(s.raw(), raw_ptr(), &_size) == -1) {
 		throw (exception("getpeername"));
 	}
+}
+
+template<socket_domain D>
+basic_address<D>::basic_address(storage_type const* that)
+	requires internet_domain<D> {
+	std::memcpy(&_raw, that, _max_size);
 }
 
 // Conversions
@@ -95,4 +102,4 @@ basic_address<D>::size() const noexcept {
 
 }; // namespace network
 
-#endif // NETPP_BASIC_ADDRESS_IPP
+#endif // NETPP_ADDRESS_IPP

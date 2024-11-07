@@ -65,13 +65,13 @@ basic_socket<D, T>::error() const {
 
 template<socket_domain D, socket_type T>
 typename basic_socket<D, T>::template bool_option<SO_REUSEADDR>
-basic_socket<D, T>::reuse_address() const requires is_inet<D> {
+basic_socket<D, T>::reuse_address() const requires internet_domain<D> {
 	return (bool_option<SO_REUSEADDR>(_raw));
 }
 
 template<socket_domain D, socket_type T>
 typename basic_socket<D, T>::template bool_option<SO_REUSEPORT>
-basic_socket<D, T>::reuse_port() const requires is_inet<D> {
+basic_socket<D, T>::reuse_port() const requires internet_domain<D> {
 	return (bool_option<SO_REUSEPORT>(_raw));
 }
 

@@ -4,8 +4,10 @@
 # include <cstddef>
 # include <stdexcept>
 
+extern "C" {
 # include <sys/socket.h>
 # include <sys/types.h>
+}
 
 namespace network {
 
@@ -13,10 +15,11 @@ enum class socket_domain {
 	local = AF_LOCAL,
 	ipv4 = AF_INET,
 	ipv6 = AF_INET6,
+	unspecified = AF_UNSPEC,
 }; // enum class socket_domain
 
 template<socket_domain D>
-concept is_inet = (D == socket_domain::ipv4 || D == socket_domain::ipv6);
+concept internet_domain = (D == socket_domain::ipv4 || D == socket_domain::ipv6);
 
 enum class socket_type {
 	stream = SOCK_STREAM,

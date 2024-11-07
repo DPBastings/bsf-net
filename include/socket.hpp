@@ -71,9 +71,9 @@ public:
 	int				error() const;
 
 	bool_option<SO_REUSEADDR>	reuse_address() const
-		requires is_inet<D>;
+		requires internet_domain<D>;
 	bool_option<SO_REUSEPORT>	reuse_port() const
-		requires is_inet<D>;
+		requires internet_domain<D>;
 	bool_option<SO_DONTROUTE>	dont_route() const;
 	int_option<SO_INCOMING_CPU>	cpu_affinity() const;
 	bool_option<SO_KEEPALIVE>	keep_alive() const;
