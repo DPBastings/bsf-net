@@ -10,24 +10,24 @@ namespace network {
 // Basic operations
 
 template<socket_domain D, socket_type T>
-basic_address_info<D, T>::basic_address_info():
+basic_resolver<D, T>::basic_resolver():
 	_raw(nullptr) {}
 
 
 template<socket_domain D, socket_type T>
-basic_address_info<D, T>::~basic_address_info() {
+basic_resolver<D, T>::~basic_resolver() {
 	::freeaddrinfo(_raw);
 }
 
 template<socket_domain D, socket_type T>
-basic_address_info<D, T>::basic_address_info(basic_address_info<D, T>&& that):
+basic_resolver<D, T>::basic_resolver(basic_resolver<D, T>&& that):
 	_raw(that._raw) {
 	that._raw = nullptr;
 }
 
 template<socket_domain D, socket_type T>
-basic_address_info<D, T>&
-basic_address_info<D, T>::operator=(basic_address_info&& that) {
+basic_resolver<D, T>&
+basic_resolver<D, T>::operator=(basic_resolver&& that) {
 	if (this == &that) {
 		return (*this);
 	}
@@ -37,7 +37,8 @@ basic_address_info<D, T>::operator=(basic_address_info&& that) {
 }
 
 template<socket_domain D, socket_type T>
-basic_address_info<D, T>::basic_address_info(std::string const& node) {
+basic_resolver<D, T>::basic_resolver(std::string const& node)
+	requires requires { D == socket_domain::ipv4; } {
 	hint_t	hint;
 	int		err = ::getaddrinfo(node.c_str(), nullptr, &hint.data, &_raw);
 
@@ -47,7 +48,19 @@ basic_address_info<D, T>::basic_address_info(std::string const& node) {
 }
 
 template<socket_domain D, socket_type T>
-basic_address_info<D, T>::basic_address_info(std::string const& node, std::string const& service) {
+basic_resolver<D, T>::basic_resolver(std::string const& node, bool map_ipv4)
+	requires requires { D == socket_domain::ipv6; } {
+	hint_t	hint {map_ipv4 ? AI_V4MAPPED : 0};
+	int		err = ::getaddrinfo(node.c_str(), nullptr, &hint.data, &_raw);
+
+	if (err != 0) {
+		throw (exception(::gai_strerror(err)));
+	}
+}
+
+template<socket_domain D, socket_type T>
+basic_resolver<D, T>::basic_resolver(std::string const& node, std::string const& service)
+	requires requires { D == socket_domain::ipv4; } {
 	hint_t	hint;
 	int		err = ::getaddrinfo(node.c_str(), service.c_str(), &hint.data, &_raw);
 
@@ -57,7 +70,7 @@ basic_address_info<D, T>::basic_address_info(std::string const& node, std::strin
 }
 
 template<socket_domain D, socket_type T>
-basic_address_info<D, T>::basic_address_info(std::string const& node, std::string const& service, bool map_ipv4)
+basic_resolver<D, T>::basic_resolver(std::string const& node, std::string const& service, bool map_ipv4)
 	requires requires { D == socket_domain::ipv6; } {
 	hint_t	hint {map_ipv4 ? AI_V4MAPPED : 0};
 	int		err = ::getaddrinfo(node.c_str(), service.c_str(), &hint.data, &_raw);
@@ -70,33 +83,33 @@ basic_address_info<D, T>::basic_address_info(std::string const& node, std::strin
 // Iterator methods
 
 template<socket_domain D, socket_type T>
-typename basic_address_info<D, T>::iterator
-basic_address_info<D, T>::begin() const noexcept {
+typename basic_resolver<D, T>::iterator
+basic_resolver<D, T>::begin() const noexcept {
 	return (iterator(_raw));
 }
 
 template<socket_domain D, socket_type T>
-typename basic_address_info<D, T>::iterator
-basic_address_info<D, T>::end() const noexcept {
+typename basic_resolver<D, T>::iterator
+basic_resolver<D, T>::end() const noexcept {
 	return (iterator(nullptr));
 }
 
 template<socket_domain D, socket_type T>
-typename basic_address_info<D, T>::iterator
-basic_address_info<D, T>::cbegin() const noexcept {
+typename basic_resolver<D, T>::iterator
+basic_resolver<D, T>::cbegin() const noexcept {
 	return (begin());
 }
 
 template<socket_domain D, socket_type T>
-typename basic_address_info<D, T>::iterator
-basic_address_info<D, T>::cend() const noexcept {
+typename basic_resolver<D, T>::iterator
+basic_resolver<D, T>::cend() const noexcept {
 	return (end());
 }
 
 /* Dependent types */
 
 template<socket_domain D, socket_type T>
-basic_address_info<D, T>::hint_t::hint_t(int flags):
+basic_resolver<D, T>::hint_t::hint_t(int flags):
 	data {
 		.ai_flags = flags | AI_CANONNAME,
 		.ai_family = static_cast<int>(D),
@@ -109,25 +122,25 @@ basic_address_info<D, T>::hint_t::hint_t(int flags):
 	} {}
 
 template<socket_domain D, socket_type T>
-basic_address_info<D, T>::iterator::iterator(addrinfo const* ptr):
+basic_resolver<D, T>::iterator::iterator(addrinfo const* ptr):
 	_ptr(ptr) {}
 
 template<socket_domain D, socket_type T>
 bool
-basic_address_info<D, T>::iterator::operator==(iterator that) const noexcept {
+basic_resolver<D, T>::iterator::operator==(iterator that) const noexcept {
 	return (_ptr == that._ptr);
 }
 
 template<socket_domain D, socket_type T>
-typename basic_address_info<D, T>::iterator&
-basic_address_info<D, T>::iterator::operator++() noexcept {
+typename basic_resolver<D, T>::iterator&
+basic_resolver<D, T>::iterator::operator++() noexcept {
 	_ptr = _ptr->ai_next;
 	return (*this);
 }
 
 template<socket_domain D, socket_type T>
-typename basic_address_info<D, T>::iterator
-basic_address_info<D, T>::iterator::operator++(int) noexcept {
+typename basic_resolver<D, T>::iterator
+basic_resolver<D, T>::iterator::operator++(int) noexcept {
 	const_iterator	ret(*this);
 
 	_ptr = _ptr->ai_next;
@@ -135,14 +148,31 @@ basic_address_info<D, T>::iterator::operator++(int) noexcept {
 }
 
 template<socket_domain D, socket_type T>
-typename basic_address_info<D,T>::result_type
-basic_address_info<D, T>::iterator::operator*() const noexcept {
+typename basic_resolver<D,T>::result_type
+basic_resolver<D, T>::iterator::operator*() const noexcept {
 	return (result_type {
 		reinterpret_cast<typename address_type::storage_type const*>(_ptr->ai_addr),
-		_ptr->ai_canonname
+		_ptr->ai_canonname != nullptr ? _ptr->ai_canonname : ""
 	});
 }
 
-} // namespace network
+template<socket_domain D, socket_type T>
+void
+basic_resolver<D, T>::clear() noexcept {
+	::freeaddrinfo(_raw);
+	_raw = nullptr;
+}
+
+// Non-member functions
+
+template<socket_domain D, socket_type T>
+basic_resolver<D, T>::flag
+operator|(basic_resolver<D, T>::flag lhs, basic_resolver<D, T>::flag rhs) {
+	using flag = typename basic_resolver<D, T>::flag;
+
+	return (static_cast<flag>(static_cast<int>(lhs) | static_cast<int>(rhs)));
+}
+
+}; // namespace network
 
 #endif // NETPP_ADDRESS_INFO_IPP

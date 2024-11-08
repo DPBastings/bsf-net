@@ -2,7 +2,7 @@
 #include "socket.hpp"
 #include "address.hpp"
 #include "acceptor_socket.hpp"
-#include "address_info.hpp"
+#include "resolver.hpp"
 
 #include <iostream>
 #include <string>
@@ -55,11 +55,13 @@ TEST_CASE("ipv6 acceptor", "[acceptor ipv6 address]") {
 }
 
 TEST_CASE("resolver", "[resolver]") {
-	using resolver = basic_address_info<socket_domain::ipv4, socket_type::stream>;
+	using resolver = basic_resolver<socket_domain::ipv4, socket_type::stream>;
+	static char const*	host = "wikipedia.org";
 
-	resolver	r("example.com", "https");
+	resolver	r(host, "https");
 
 	for (auto const& a: r) {
-		std::cout << std::string(a.address) << std::endl;
+		std::cout << std::string(a.address) << ' ' << std::string(a.canonical_name) << std::endl;
+		REQUIRE(a.canonical_name == host);
 	}
 }
