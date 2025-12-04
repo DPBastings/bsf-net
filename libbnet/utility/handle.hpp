@@ -24,6 +24,9 @@ public:
 
 	impl_t	release() noexcept;
 	void	close();
+protected:
+	impl_t&	raw() noexcept;
+	impl_t	raw() const noexcept;
 private:
 	impl_t	_raw = null;
 }; // class handle

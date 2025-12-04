@@ -22,7 +22,7 @@ template<typename T>
 concept contiguous_byte_container = byte_container<T> && contiguous_container<T>;
 
 template<contiguous_byte_container Ctr>
-class basic_socketbuf: private Ctr {
+class socketbuf: private Ctr {
 public:
 	using Ctr::value_type; // == uint8_t
 	using Ctr::size_type;
@@ -41,19 +41,19 @@ public:
 	using Ctr::push_back;
 	void		append(std::u8string_view);
 	template<contiguous_byte_container Dtr>
-	void		append(basic_socketbuf<Dtr> const&);
+	void		append(socketbuf<Dtr> const&);
 
 	size_type	get_from(std::istream&);
 	size_type	put_into(std::ostream&) const;
-}; // class basic_socketbuf
+}; // class socketbuf
 
 template<contiguous_byte_container Ctr>
-std::istream&	operator>>(std::istream&, basic_socketbuf<Ctr>&);
+std::istream&	operator>>(std::istream&, socketbuf<Ctr>&);
 template<contiguous_byte_container Ctr>
-std::ostream&	operator<<(std::ostream&, basic_socketbuf<Ctr> const&);
+std::ostream&	operator<<(std::ostream&, socketbuf<Ctr> const&);
 
 }; // namespace bsf::net
 
-#include "basic_socketbuf.tpp"
+#include "socketbuf.tpp"
 
 #endif // BSF_NET_BASE_BUFFER_HPP

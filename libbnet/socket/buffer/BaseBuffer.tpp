@@ -2,20 +2,20 @@
 # define BSF_NET_BASE_BUFFER_TPP
 
 # ifndef BSF_NET_BASE_BUFFER_HPP
-#  error "include in basic_socketbuf.hpp"
+#  error "include in socketbuf.hpp"
 # endif // BSF_NET_BASE_BUFFER_HPP
 
 namespace bsf::net {
 
 template<contiguous_byte_container Ctr>
-basic_socketbuf<Ctr>::size_type
-basic_socketbuf<Ctr>::remaining_capacity() const noexcept {
+socketbuf<Ctr>::size_type
+socketbuf<Ctr>::remaining_capacity() const noexcept {
 	return (capacity() - size());
 }
 
 template<contiguous_byte_container Ctr>
 bool
-basic_socketbuf<Ctr>::append(std::u8string_view bytes) {
+socketbuf<Ctr>::append(std::u8string_view bytes) {
 	if (bytes.length() > remaining_capacity()) {
 		return (false);
 	}
@@ -28,7 +28,7 @@ basic_socketbuf<Ctr>::append(std::u8string_view bytes) {
 template<contiguous_byte_container Ctr>
 template<contiguous_byte_container Dtr>
 bool
-basic_socketbuf<Ctr>::append(basic_socketbuf<Dtr> const& that) {
+socketbuf<Ctr>::append(socketbuf<Dtr> const& that) {
 	if (that.length() > remaining_capacity()) {
 		return (false);
 	}

@@ -6,10 +6,10 @@
 
 namespace bsf::net {
 
-template<socket_type T>
-concept is_connection_based = (T == socket_type::stream || T == socket_type::seq_packet);
+template<type::type T>
+concept is_connection_based = (T == type::type::stream || T == type::type::seq_packet);
 
-template<socket_domain D, socket_type T>
+template<domain::domain D, type::type T>
 class basic_acceptor_socket: public basic_socket<D, T> {
 public:
 	using super = basic_socket<D, T>;
@@ -32,6 +32,6 @@ public:
 
 }; // namespace bsf::net
 
-# include "./acceptor_socket.tpp"
+# include "./acceptor_socket.ipp"
 
 #endif // BSF_NET_ACCEPTOR_SOCKET_HPP

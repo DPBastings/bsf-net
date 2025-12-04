@@ -1,23 +1,24 @@
 #ifndef BSF_NET_SOCKET_HPP
 # define BSF_NET_SOCKET_HPP
 
-# include <libbnet/socket/properties.hpp>
-# include <libbnet/socket/address.hpp>
-# include <libbnet/utility/handle.hpp>
-# include <concepts>
+# include <libbnet/domain.hpp> // net::domain::*
+# include <libbnet/socket/type.hpp> // net::socket::type::*
+# include <libbnet/address.hpp> // net::address::*
+# include <libbnet/utility/handle.hpp> // net::handle
+# include <concepts> // std::same_as
 # include <utility>
 
 namespace bsf::net::socket {
 
-template<typename T>
-concept contiguous_container = requires(T t) {
-	t.data();
-	t.size();
+template<typename Type>
+concept contiguous_container = requires(Type Type) {
+	Type.data();
+	Type.size();
 };
 
-template<typename T>
-concept iobuf = std::is_same_v<typename T::value_type, char>
-	&& contiguous_container<T>;
+template<typename Type>
+concept iobuf = std::same_as<typename Type::value_type, char>
+	&& contiguous_container<Type>;
 
 
 enum class recv_flags: int {
@@ -44,12 +45,14 @@ enum class send_flags: int {
 
 
 
-template<typename D, typename T>
-class basic_socket: public handle<basic_socket<D, T>> {
+template<domain::domain Domain, type::type Type>
+class basic_socket: public handle<basic_socket<Domain, Type>> {
 public:
-	using address_type = basic_address<D>;
+	using address_type = basic_address<Domain>;
 	using streamsize = ssize_t;
 	using handle::raw_type;
+	static constexpr auto	domain = Domain;
+	static constexpr auto	type = Type;
 
 	template<int O, typename V>
 	class option_reference;
@@ -61,20 +64,17 @@ public:
 	template<int O>
 	using time_option = option_reference<O, timeval>;
 
-	explicit basic_socket();
-	explicit basic_socket(bool, bool);
+	explicit basic_socket() = default;
 
-	socket_domain	domain() const noexcept;
-	socket_type		type() const noexcept;
 	int				protocol() const noexcept;
 	address_type	address() const;
 	address_type	peer_address() const;
 	int				error() const;
 
 	bool_option<SO_REUSEADDR>	reuse_address() const
-		requires is_inet<D>;
+		requires is_inet<Domain>;
 	bool_option<SO_REUSEPORT>	reuse_port() const
-		requires is_inet<D>;
+		requires is_inet<Domain>;
 	bool_option<SO_DONTROUTE>	dont_route() const;
 	int_option<SO_INCOMING_CPU>	cpu_affinity() const;
 	bool_option<SO_KEEPALIVE>	keep_alive() const;
@@ -95,10 +95,10 @@ public:
 	streamsize	recv(B&, recv_flags = recv_flags::none) const;
 
 	template<typename... Ts>
-	static std::pair<basic_socket, basic_socket>	make_pair(Ts&&...)	requires is_pairable<D>;
-
+	static std::pair<basic_socket, basic_socket>	make_pair(Ts&&...)
+		requires is_pairable<Domain>;
 private:
-	friend class basic_address<D>;
+	friend class basic_address<Domain>;
 
 	template<int O, typename V>
 	friend class option_reference;
@@ -106,36 +106,28 @@ private:
 	basic_socket(raw_type);
 
 	static raw_type	make_handle(int);
-
-	raw_type&	raw() noexcept;
-	raw_type	raw() const noexcept;
 }; // class template socket
 
-template<socket_domain D, socket_type T>
+template<domain::domain Domain, type::type Type>
 template<int O, typename V>
-class basic_socket<D, T>::option_reference {
+class basic_socket<Domain, Type>::option_reference {
 public:
-	using enclosing = basic_socket<D, T>;
+	using enclosing = basic_socket<Domain, Type>;
 
 	void operator=(V) const;
 
 	operator V() const;
 private:
 	friend enclosing;
-	friend class basic_acceptor_socket<D, T>;
+	friend class basic_acceptor_socket<Domain, Type>;
 
 	option_reference(enclosing::raw_type);
 
 	enclosing::raw_type	_raw_socket;
 }; // class option_reference
 
-using ipv4_tcp_socket = basic_socket<socket_domain::ipv4, socket_type::stream>;
-using ipv4_udp_socket = basic_socket<socket_domain::ipv4, socket_type::datagram>;
-using ipv6_tcp_socket = basic_socket<socket_domain::ipv6, socket_type::stream>;
-using ipv6_udp_socket = basic_socket<socket_domain::ipv6, socket_type::datagram>;
-
 }; // namespace bsf::net
 
-# include "./socket.tpp"
+# include "./socket.ipp"
 
 #endif // BSF_NET_SOCKET_HPP

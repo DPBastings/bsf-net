@@ -2,7 +2,7 @@
 # define BSF_NET_STATIC_BUFFER_HPP
 
 # include "network.hpp"
-# include "basic_socketbuf.hpp"
+# include "socketbuf.hpp"
 
 # include <array>
 # include <istream>
@@ -32,7 +32,7 @@ private:
 }; // class StaticBufferContainer
 
 template<size_t SIZE>
-using StaticBuffer = basic_socketbuf<StaticBufferContainer<SIZE>>;
+using StaticBuffer = socketbuf<StaticBufferContainer<SIZE>>;
 
 }; // namespace bsf::net
 

@@ -1,19 +1,20 @@
-#ifndef BSF_NET_SOCKET_PROPERTIES_HPP
-# define BSF_NET_SOCKET_PROPERTIES_HPP
+#ifndef BSF_NET_type::type_HPP
+# define BSF_NET_type::type_HPP
 
 namespace bsf::net::socket::type {
 
-struct stream {};
-struct datagram {};
-struct seqpacket {};
-struct raw {};
-struct rdm {};
-
+enum type {
+    stream = SOCK_STREAM,
+    datagram = SOCK_DGRAM,
+    seqpacket = SOCK_SEQPACKET,
+    raw = SOCK_RAW,
+    rdm = SOCK_RDM,
+}; // enum type
 
 template<>
 struct traits_base {};
 
-template<typename T>
+template<type T>
 struct traits;
 
 template<>
@@ -29,4 +30,4 @@ struct traits<rdm> {};
 
 }; // namespace bsf::net::socket::type
 
-#endif // BSF_BNET_SOCKET_PROPERTIES_HPP
+#endif // BSF_NET_type::type_HPP

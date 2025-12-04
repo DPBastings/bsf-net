@@ -13,7 +13,7 @@ extern "C" {
 using namespace bsf::net;
 
 TEST_CASE("address ipv4") {
-	using address = basic_address<socket_domain::ipv4>;
+	using address = basic_address<domain::domain::ipv4>;
 
 	address	a0;
 	address	a1 {address::default_host, 443};
@@ -24,7 +24,7 @@ TEST_CASE("address ipv4") {
 }
 
 TEST_CASE("ipv4 socket default address", "[socket ipv4 address]") {
-	using socket = basic_socket<socket_domain::ipv4, socket_type::stream>;
+	using socket = basic_socket<domain::domain::ipv4, type::type::stream>;
  
 	socket	s;
 
@@ -32,23 +32,23 @@ TEST_CASE("ipv4 socket default address", "[socket ipv4 address]") {
 }
 
 TEST_CASE("ipv4 tcp socket protocol", "[socket ipv4 tcp protocol]") {
-	basic_socket<socket_domain::ipv4, socket_type::stream>	s;
+	basic_socket<domain::domain::ipv4, type::type::stream>	s;
 
 	protoent*	ent = ::getprotobynumber(s.protocol());
 	REQUIRE(strcmp(ent->p_name, "tcp") == 0);
 }
 
 TEST_CASE("ipv4 udp socket protocol", "[socket ipv4 udp protocol]") {
-	basic_socket<socket_domain::ipv4, socket_type::datagram>	s;
+	basic_socket<domain::domain::ipv4, type::type::datagram>	s;
 
 	protoent*	ent = ::getprotobynumber(s.protocol());
 	REQUIRE(strcmp(ent->p_name, "udp") == 0);
 }
 
 TEST_CASE("ipv6 acceptor" "[acceptor ipv6 address]") {
-	using address = basic_address<socket_domain::ipv6>;
+	using address = basic_address<domain::domain::ipv6>;
 	address	addr(address::default_host, 1100);
-	basic_acceptor_socket<socket_domain::ipv6, socket_type::stream>	s(addr);
+	basic_acceptor_socket<domain::domain::ipv6, type::type::stream>	s(addr);
 
 	REQUIRE(std::string(s.address()) == "[0:0:0:0:0:0:0:0]:1100");
 }

@@ -1,6 +1,6 @@
 # acceptor_socket
 ```cpp
-template<bsf::net::socket_domain DOMAIN>
+template<bsf::net::domain::domain DOMAIN>
 class bsf::net::acceptor_socket: public bsf::net::stream_socket<DOMAIN>;
 ```
 Class representing a socket that can listen for incoming connections.

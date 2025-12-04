@@ -1,13 +1,13 @@
 # socket
 ```cpp
-template<bsf::net::socket_domain DOMAIN, bsf::net::socket_typeYPE>
+template<bsf::net::domain::domain DOMAIN, bsf::net::type::typeYPE>
 class bsf::net::socket: public handle
 ```
 Class representing a network socket belonging to a particular `DOMAIN` and conforming to a particular `TYPE`.
 
 ## Associated types
-- `enum class socket_domain`
-The socket's communication socket_domain. Possible values:
+- `enum class domain::domain`
+The socket's communication domain::domain. Possible values:
 	- `ipv4`;
 	- `local`;
 - `enum class type`
