@@ -1,12 +1,12 @@
 #include "address.hpp"
 
-using address = network::basic_address<network::socket_domain::ipv6>;
+using address = bsf::net::basic_address<bsf::net::socket_domain::ipv6>;
 
 // Basic operations
 
 template<>
 address::basic_address(host_type host, port_type port) 
-	requires (network::has_port<address::domain>):
+	requires (bsf::net::has_port<address::domain>):
 	_raw {
 		.sin6_family = static_cast<sa_family_t>(domain),
 		.sin6_port = htons(port),
@@ -20,7 +20,7 @@ address::basic_address(host_type host, port_type port)
 template<>
 address::port_type
 address::port() const noexcept
-	requires (network::has_port<address::domain>) {
+	requires (bsf::net::has_port<address::domain>) {
 	return (ntohs(_raw.sin6_port));
 }
 

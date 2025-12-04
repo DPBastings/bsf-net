@@ -1,11 +1,11 @@
-#ifndef NETPP_BASE_BUFFER_TPP
-# define NETPP_BASE_BUFFER_TPP
+#ifndef BSF_NET_BASE_BUFFER_TPP
+# define BSF_NET_BASE_BUFFER_TPP
 
-# ifndef NETPP_BASE_BUFFER_HPP
+# ifndef BSF_NET_BASE_BUFFER_HPP
 #  error "include in basic_socketbuf.hpp"
-# endif // NETPP_BASE_BUFFER_HPP
+# endif // BSF_NET_BASE_BUFFER_HPP
 
-namespace network {
+namespace bsf::net {
 
 template<contiguous_byte_container Ctr>
 basic_socketbuf<Ctr>::size_type
@@ -38,6 +38,6 @@ basic_socketbuf<Ctr>::append(basic_socketbuf<Dtr> const& that) {
 	return (true);
 }
 
-}; // namespace network
+}; // namespace bsf::net
 
-#endif // NETPP_BASE_BUFFER_TPP
+#endif // BSF_NET_BASE_BUFFER_TPP

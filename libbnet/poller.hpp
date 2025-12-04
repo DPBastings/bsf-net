@@ -1,5 +1,5 @@
-#ifndef NETPP_POLLER_HPP
-# define NETPP_POLLER_HPP
+#ifndef BSF_NET_POLLER_HPP
+# define BSF_NET_POLLER_HPP
 
 # include "network.hpp"
 # include "./handle.hpp"
@@ -13,7 +13,7 @@ extern "C" {
 # include <sys/epoll.h>
 }
 
-namespace network {
+namespace bsf::net {
 	
 class poller: public handle {
 public:
@@ -75,8 +75,8 @@ private:
 constexpr poller::mode			operator|(poller::mode, poller::mode);
 constexpr poller::event_type	operator|(poller::event_type, poller::event_type);
 
-}; // namespace network
+}; // namespace bsf::net
 
 # include "./poller.ipp"
 
-#endif // NETPP_POLLER_HPP
+#endif // BSF_NET_POLLER_HPP

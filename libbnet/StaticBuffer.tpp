@@ -1,13 +1,13 @@
-#ifndef NETPP_STATIC_BUFFER_CONTAINER_TPP
-# define NETPP_STATIC_BUFFER_CONTAINER_TPP
+#ifndef BSF_NET_STATIC_BUFFER_CONTAINER_TPP
+# define BSF_NET_STATIC_BUFFER_CONTAINER_TPP
 
-# ifndef NETPP_STATIC_BUFFER_HPP
+# ifndef BSF_NET_STATIC_BUFFER_HPP
 #  error "include in StaticBuffer.hpp"
-# endif // NETPP_STATIC_BUFFER_HPP
+# endif // BSF_NET_STATIC_BUFFER_HPP
 
 # include <sstream>
 
-namespace network {
+namespace bsf::net {
 template<size_t SIZE>
 StatioBufferContainer<SIZE>::Buffer():
 	super(), _len(0) {}
@@ -130,6 +130,6 @@ operator<<(std::ostream& os, StatioBufferContainer<SIZE> const& that) {
 	return (os);
 }
 
-}; // namespace network
+}; // namespace bsf::net
 
-#endif // NETPP_STATIC_BUFFER_CONTAINER_TPP
+#endif // BSF_NET_STATIC_BUFFER_CONTAINER_TPP

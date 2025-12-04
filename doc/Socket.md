@@ -1,7 +1,7 @@
 # socket
 ```cpp
-template<network::socket_domain DOMAIN, network::socket_typeYPE>
-class network::socket: public handle
+template<bsf::net::socket_domain DOMAIN, bsf::net::socket_typeYPE>
+class bsf::net::socket: public handle
 ```
 Class representing a network socket belonging to a particular `DOMAIN` and conforming to a particular `TYPE`.
 
@@ -21,7 +21,7 @@ Miscellaneous options to be set on the socket's file descriptor. Possible values
 
 ## Member types
 - `address`
-The address type associated with this kind of socket. Equates `network::address<DOMAIN>`.
+The address type associated with this kind of socket. Equates `bsf::net::address<DOMAIN>`.
 - `OptionList`
 Aggregate type containing an arbitrary number of `socketOption`s.
 

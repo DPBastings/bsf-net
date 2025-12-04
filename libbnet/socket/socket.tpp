@@ -1,15 +1,15 @@
-#ifndef NETPP_SOCKET_TPP
-# define NETPP_SOCKET_TPP
+#ifndef BSF_NET_SOCKET_TPP
+# define BSF_NET_SOCKET_TPP
 
-# ifndef NETPP_SOCKET_HPP
+# ifndef BSF_NET_SOCKET_HPP
 #  error "include in network/socket.hpp"
-# endif // NETPP_SOCKET_HPP
+# endif // BSF_NET_SOCKET_HPP
 
 extern "C" {
 #include <unistd.h>
 }
 
-namespace network {
+namespace bsf::net {
 
 // Basic operations
 
@@ -264,6 +264,6 @@ basic_socket<D, T>::option_reference<O, V>::operator V() const {
 	return (optval);
 }
 
-}; // namespace network
+}; // namespace bsf::net
 
-#endif // NETPP_SOCKET_TPP
+#endif // BSF_NET_SOCKET_TPP

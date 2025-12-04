@@ -1,6 +1,6 @@
 # address
 ```cpp
-template<network::socket_domain DOMAIN>
+template<bsf::net::socket_domain DOMAIN>
 class address: public addressBase;
 ```
 Class representing a socket address belonging to a particular address family (`DOMAIN`).  

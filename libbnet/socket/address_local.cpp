@@ -1,6 +1,6 @@
 #include "address.hpp"
 
-using address = network::basic_address<network::socket_domain::local>;
+using address = bsf::net::basic_address<bsf::net::socket_domain::local>;
 
 template<>
 address::basic_address(std::string const&):
@@ -20,6 +20,6 @@ address::host() const noexcept {
 template<>
 address::subclass_type
 address::subclass() const noexcept
-	requires (network::has_subclass<address::domain>) {
+	requires (bsf::net::has_subclass<address::domain>) {
 	return (subclass_type::path); // todo
 }

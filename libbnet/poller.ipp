@@ -1,13 +1,13 @@
-#ifndef NETPP_POLLER_METHOD_TPP
-# define NETPP_POLLER_METHOD_TPP
+#ifndef BSF_NET_POLLER_METHOD_TPP
+# define BSF_NET_POLLER_METHOD_TPP
 
-# ifndef NETPP_POLLER_HPP
+# ifndef BSF_NET_POLLER_HPP
 #  error "include in network/poller.hpp"
-# endif // NETPP_POLLER_HPP
+# endif // BSF_NET_POLLER_HPP
 
 # include <algorithm>
 
-namespace network {
+namespace bsf::net {
 
 template<typename T> // Add concept: requires a handle-derived type.
 shared_handle
@@ -54,6 +54,6 @@ operator|(poller::event_type lhs, poller::event_type rhs) {
 	));
 }
 
-}; // namespace network
+}; // namespace bsf::net
 
-#endif // NETPP_POLLER_METHOD_TPP
+#endif // BSF_NET_POLLER_METHOD_TPP

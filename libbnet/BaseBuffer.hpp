@@ -1,11 +1,11 @@
-#ifndef NETPP_BASE_BUFFER_HPP
-# define NETPP_BASE_BUFFER_HPP
+#ifndef BSF_NET_BASE_BUFFER_HPP
+# define BSF_NET_BASE_BUFFER_HPP
 
 # include <concepts>
 # include <iostream>
 # include <string>
 
-namespace network {
+namespace bsf::net {
 	
 template<typename T>
 concept byte_container = requires {
@@ -52,8 +52,8 @@ std::istream&	operator>>(std::istream&, basic_socketbuf<Ctr>&);
 template<contiguous_byte_container Ctr>
 std::ostream&	operator<<(std::ostream&, basic_socketbuf<Ctr> const&);
 
-}; // namespace network
+}; // namespace bsf::net
 
 #include "basic_socketbuf.tpp"
 
-#endif // NETPP_BASE_BUFFER_HPP
+#endif // BSF_NET_BASE_BUFFER_HPP

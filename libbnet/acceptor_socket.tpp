@@ -1,11 +1,11 @@
-#ifndef NETPP_ACCEPTOR_SOCKET_TPP
-# define NETPP_ACCEPTOR_SOCKET_TPP
+#ifndef BSF_NET_ACCEPTOR_SOCKET_TPP
+# define BSF_NET_ACCEPTOR_SOCKET_TPP
 
-# ifndef NETPP_ACCEPTOR_SOCKET_HPP
+# ifndef BSF_NET_ACCEPTOR_SOCKET_HPP
 #  error "include in acceptor_socket.hpp"
-# endif // NETPP_ACCEPTOR_SOCKET_HPP
+# endif // BSF_NET_ACCEPTOR_SOCKET_HPP
 
-namespace network {
+namespace bsf::net {
 
 // Basic operations
 
@@ -60,11 +60,11 @@ basic_acceptor_socket<D, T>::accept(address_type& addr, bool non_blocking, bool 
 		&size,
 		(non_blocking ? SOCK_NONBLOCK : 0) | (close_on_exec ? SOCK_CLOEXEC : 0));
 
-	if (raw_handle == handle::_invalid_handle)
+	if (raw_handle == handle::null)
 		throw (exception("accept"));
 	return (super(raw_handle));
 }
 
-}; // namespace network
+}; // namespace bsf::net
 
-#endif // NETPP_ACCEPTOR_SOCKET_TPP
+#endif // BSF_NET_ACCEPTOR_SOCKET_TPP

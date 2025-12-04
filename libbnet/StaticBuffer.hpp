@@ -1,5 +1,5 @@
-#ifndef NETPP_STATIC_BUFFER_HPP
-# define NETPP_STATIC_BUFFER_HPP
+#ifndef BSF_NET_STATIC_BUFFER_HPP
+# define BSF_NET_STATIC_BUFFER_HPP
 
 # include "network.hpp"
 # include "basic_socketbuf.hpp"
@@ -9,7 +9,7 @@
 # include <ostream>
 # include <string>
 
-namespace network {
+namespace bsf::net {
 
 template<size_t SIZE> // should be like std::array::size_type
 class StaticBufferContainer: private std::array<uint8_t, SIZE> {
@@ -34,8 +34,8 @@ private:
 template<size_t SIZE>
 using StaticBuffer = basic_socketbuf<StaticBufferContainer<SIZE>>;
 
-}; // namespace network
+}; // namespace bsf::net
 
 # include "network/StaticBufferContainer.tpp"
 
-#endif // NETPP_STATIC_BUFFER_HPP
+#endif // BSF_NET_STATIC_BUFFER_HPP

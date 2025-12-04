@@ -5,7 +5,7 @@
 
 extern int errno;
 
-using network::exception;
+using bsf::net::exception;
 
 exception::exception(char const* msg) noexcept:
 	_msg(msg), _errno(errno) {}

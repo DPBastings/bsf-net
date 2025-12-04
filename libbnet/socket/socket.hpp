@@ -1,16 +1,13 @@
-#ifndef NETPP_SOCKET_HPP
-# define NETPP_SOCKET_HPP
+#ifndef BSF_NET_SOCKET_HPP
+# define BSF_NET_SOCKET_HPP
 
+# include <libbnet/socket/properties.hpp>
+# include <libbnet/socket/address.hpp>
+# include <libbnet/utility/handle.hpp>
 # include <concepts>
 # include <utility>
 
-# include "network.hpp"
-# include "./handle.hpp"
-
-namespace network {
-
-template<socket_domain D>
-concept is_pairable = (D == socket_domain::local /* || D == socket_domain::tipc */);
+namespace bsf::net::socket {
 
 template<typename T>
 concept contiguous_container = requires(T t) {
@@ -22,10 +19,35 @@ template<typename T>
 concept iobuf = std::is_same_v<typename T::value_type, char>
 	&& contiguous_container<T>;
 
-template<socket_domain D, socket_type T>
-class basic_socket: public handle {
+
+enum class recv_flags: int {
+	none = 0x00,
+	close_on_exec = MSG_CMSG_CLOEXEC,
+	dont_wait = MSG_DONTWAIT,
+	error_queue = MSG_ERRQUEUE,
+	out_of_band = MSG_OOB,
+	peek = MSG_PEEK,
+	truncate = MSG_TRUNC,
+	wait_all = MSG_WAITALL,
+}; // enum class recv_flags
+enum class send_flags: int {
+	none = 0x00,
+	confirm = MSG_CONFIRM,
+	dont_route = MSG_DONTROUTE,
+	dont_wait = MSG_DONTWAIT,
+	end_record = MSG_EOR,
+	more = MSG_MORE,
+	no_signal = MSG_NOSIGNAL,
+	out_of_band = MSG_OOB,
+	fast_open = MSG_FASTOPEN,
+}; // enum class send_flags
+
+
+
+template<typename D, typename T>
+class basic_socket: public handle<basic_socket<D, T>> {
 public:
-	using address_type = network::basic_address<D>;
+	using address_type = basic_address<D>;
 	using streamsize = ssize_t;
 	using handle::raw_type;
 
@@ -39,29 +61,8 @@ public:
 	template<int O>
 	using time_option = option_reference<O, timeval>;
 
-	enum class recv_flags: int {
-		none = 0,
-		close_on_exec = MSG_CMSG_CLOEXEC,
-		dont_wait = MSG_DONTWAIT,
-		error_queue = MSG_ERRQUEUE,
-		out_of_band = MSG_OOB,
-		peek = MSG_PEEK,
-		truncate = MSG_TRUNC,
-		wait_all = MSG_WAITALL,
-	}; // enum class recv_flags
-	enum class send_flags: int {
-		none = 0,
-		confirm = MSG_CONFIRM,
-		dont_route = MSG_DONTROUTE,
-		dont_wait = MSG_DONTWAIT,
-		end_record = MSG_EOR,
-		more = MSG_MORE,
-		no_signal = MSG_NOSIGNAL,
-		out_of_band = MSG_OOB,
-		fast_open = MSG_FASTOPEN,
-	}; // enum class send_flags
-
-	basic_socket(bool = false, bool = true);
+	explicit basic_socket();
+	explicit basic_socket(bool, bool);
 
 	socket_domain	domain() const noexcept;
 	socket_type		type() const noexcept;
@@ -93,7 +94,8 @@ public:
 	template<iobuf B>
 	streamsize	recv(B&, recv_flags = recv_flags::none) const;
 
-	static std::pair<basic_socket, basic_socket>	make_pair(bool = false, bool = true) requires is_pairable<D>;
+	template<typename... Ts>
+	static std::pair<basic_socket, basic_socket>	make_pair(Ts&&...)	requires is_pairable<D>;
 
 private:
 	friend class basic_address<D>;
@@ -132,8 +134,8 @@ using ipv4_udp_socket = basic_socket<socket_domain::ipv4, socket_type::datagram>
 using ipv6_tcp_socket = basic_socket<socket_domain::ipv6, socket_type::stream>;
 using ipv6_udp_socket = basic_socket<socket_domain::ipv6, socket_type::datagram>;
 
-}; // namespace network
+}; // namespace bsf::net
 
 # include "./socket.tpp"
 
-#endif // NETPP_SOCKET_HPP
+#endif // BSF_NET_SOCKET_HPP

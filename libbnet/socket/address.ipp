@@ -1,11 +1,11 @@
-#ifndef NETPP_BASIC_ADDRESS_IPP
-# define NETPP_BASIC_ADDRESS_IPP
+#ifndef BSF_NET_BASIC_ADDRESS_IPP
+# define BSF_NET_BASIC_ADDRESS_IPP
 
 # include <sstream>
 
 // todo: make the _size member static constexpr for socket address
 
-namespace network {
+namespace bsf::net {
 
 // Basic operations
 
@@ -93,6 +93,6 @@ basic_address<D>::size() const noexcept {
 	return (_max_size);
 }
 
-}; // namespace network
+}; // namespace bsf::net
 
-#endif // NETPP_BASIC_ADDRESS_IPP
+#endif // BSF_NET_BASIC_ADDRESS_IPP

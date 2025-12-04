@@ -10,7 +10,7 @@ extern "C" {
 #include <netdb.h>
 }
 
-using namespace network;
+using namespace bsf::net;
 
 TEST_CASE("address ipv4") {
 	using address = basic_address<socket_domain::ipv4>;

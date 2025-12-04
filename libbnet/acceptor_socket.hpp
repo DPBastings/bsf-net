@@ -1,10 +1,10 @@
-#ifndef NETPP_ACCEPTOR_SOCKET_HPP
-# define NETPP_ACCEPTOR_SOCKET_HPP
+#ifndef BSF_NET_ACCEPTOR_SOCKET_HPP
+# define BSF_NET_ACCEPTOR_SOCKET_HPP
 
 # include "network.hpp"
 # include "socket.hpp"
 
-namespace network {
+namespace bsf::net {
 
 template<socket_type T>
 concept is_connection_based = (T == socket_type::stream || T == socket_type::seq_packet);
@@ -30,8 +30,8 @@ public:
 	typename super::streamsize	send(C&, typename super::send_flags) = delete;
 }; // class template acceptor_socket<socket_D>
 
-}; // namespace network
+}; // namespace bsf::net
 
 # include "./acceptor_socket.tpp"
 
-#endif // NETPP_ACCEPTOR_SOCKET_HPP
+#endif // BSF_NET_ACCEPTOR_SOCKET_HPP
