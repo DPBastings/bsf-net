@@ -1,11 +1,12 @@
-#include <libbnet/address/address.hpp>
+#include <libbsf/net/address/address.hpp>
+#include <sstream> // std::ostringstream
 
-using Address = bsf::net::address::basic_address<bsf::net::domain::ipv4>;
+using Address = bsf::net::address::address<bsf::net::domain::ipv4>;
 
 // Basic operations
 
 template<>
-Address::basic_address(host_t host, port_t port):
+Address::address(host_t host, port_t port):
 	_raw {
 		.sin_family = static_cast<sa_family_t>(domain),
 		.sin_port = ::htons(port),

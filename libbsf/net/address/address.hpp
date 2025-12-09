@@ -1,8 +1,8 @@
 #ifndef BSF_NET_ADDRESS_HPP
 # define BSF_NET_ADDRESS_HPP
 
-# include <libbnet/domain.hpp> // net::domain::*
-# include <libbnet/utility/utility.hpp> // net::void_t
+# include <libbsf/net/domain.hpp> // net::domain::*
+# include <libbsf/net/utility/utility.hpp> // net::void_t
 # include <concepts> // std::same_as
 # include <cstdint> // *int*_t
 # include <optional> // std::optional
@@ -43,26 +43,26 @@ struct traits<domain::local>:
 	traits_base<sockaddr_un, char const*, void_t, nullptr> {};
 
 template<domain::domain Domain>
-class basic_address {
+class address {
 public:
 	static constexpr auto	domain = Domain;
 	using storage_t = traits<Domain>::storage_t;
 	using host_t = traits<Domain>::host_t;
 	using port_t = traits<Domain>::port_t;
 
-	basic_address() noexcept;
-	basic_address(host_t)
+	address() noexcept;
+	address(host_t)
 		requires (!traits<Domain>::has_port);
-	basic_address(host_t, port_t)
+	address(host_t, port_t)
 		requires (traits<Domain>::has_port);
-	
-	static std::optional<basic_address>	from_string(char const*) noexcept;
-	static std::string					to_string() const;
+
+	static std::optional<address>	from_string(char const*) noexcept;
+	std::string							to_string() const;
 
 	host_t	host() const noexcept;
 	port_t	port() const noexcept;
 private:
-	basic_address(storage_t, socklen_t);
+	address(storage_t, socklen_t);
 
 	sockaddr*		raw_ptr() noexcept;
 	sockaddr const*	raw_ptr() const noexcept;
@@ -73,7 +73,10 @@ private:
 
 	storage_t	_raw;
 	socklen_t	_size = 0;
-}; // class basic_address
+}; // class address
+
+template<domain::domain Domain>
+std::string	to_string(address<Domain> const&);
 
 }; // namespace bsf::net::address
 

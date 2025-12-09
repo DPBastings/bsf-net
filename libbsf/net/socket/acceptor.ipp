@@ -2,7 +2,7 @@
 # define BSF_NET_ACCEPTOR_SOCKET_TPP
 
 # ifndef BSF_NET_ACCEPTOR_SOCKET_HPP
-#  error "include in acceptor_socket.hpp"
+#  error "include in acceptor_socket_base.hpp"
 # endif // BSF_NET_ACCEPTOR_SOCKET_HPP
 
 namespace bsf::net {

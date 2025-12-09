@@ -13,10 +13,9 @@ enum domain {
 	ipv6 = AF_INET6,
 };
 
-template<bool IsInternet, bool IsPairable>
+template<bool IsInternet>
 struct traits_base {
 	static constexpr bool	is_internet = IsInternet;
-	static constexpr bool	is_pairable = IsPairable;
 };
 
 template<domain Domain>
@@ -24,15 +23,15 @@ struct traits;
 
 template<>
 struct traits<domain::local>:
-	traits_base<false, true> {};
+	traits_base<false> {};
 
 template<>
 struct traits<domain::ipv4>:
-	traits_base<true, false> {};
+	traits_base<true> {};
 
 template<>
 struct traits<domain::ipv6>:
-	traits_base<true, false> {};
+	traits_base<true> {};
 
 }; // namespace bsf::net::domain
 

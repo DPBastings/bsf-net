@@ -1,9 +1,7 @@
-#ifndef BSF_NET_UTILITY_HANDLE_IPP
-# define BSF_NET_UTILITY_HANDLE_IPP
+# ifndef BSF_NET_CATCH_CLOSE_FAILURE
+#  include <libbsf/net/utility/except.hpp>
+# endif // BSF_NET_CATCH_CLOSE_FAILURE
 
-# ifndef BNET_CATCH_CLOSE_FAILURE
-#  include <libbnet/utility/except.hpp>
-# endif // BNET_CATCH_CLOSE_FAILURE
 extern "C" {
 # include <unistd.h>
 }
@@ -12,7 +10,7 @@ namespace bsf::net {
 
 // Basic operations
 
-handle::handle(raw_type raw):
+handle::handle(raw_t raw):
 	_raw{ raw } {}
 
 handle::~handle() {
@@ -41,9 +39,9 @@ handle::is_open() const noexcept {
 	return (_raw != null);
 }
 
-handle::raw_type
+handle::raw_t
 handle::release() noexcept {
-	raw_type const	to_release = _raw;
+	raw_t const	to_release = _raw;
 
 	_raw = null;
 	return (to_release);
@@ -61,5 +59,3 @@ handle::close() {
 }
 
 }; // namespace bsf::net
-
-#endif // BSF_NET_UTILITY_HANDLE_IPP

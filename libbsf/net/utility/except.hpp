@@ -7,7 +7,7 @@ namespace bsf::net {
 
 class exception: public std::exception {
 public:
-	explicit exception();
+	explicit exception() noexcept;
 	explicit exception(char const*) noexcept;
 
 	char const*	what() const noexcept;
