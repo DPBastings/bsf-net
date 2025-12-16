@@ -18,7 +18,7 @@ struct traits_base {
 	static constexpr bool	is_internet = IsInternet;
 };
 
-template<domain Domain>
+template<domain D>
 struct traits;
 
 template<>

@@ -1,9 +1,10 @@
-# ifndef BSF_NET_CATCH_CLOSE_FAILURE
-#  include <libbsf/net/utility/except.hpp>
-# endif // BSF_NET_CATCH_CLOSE_FAILURE
+#include <libbsf/net/utility/handle.hpp>
+#ifndef BSF_NET_CATCH_CLOSE_FAILURE
+# include <libbsf/net/utility/except.hpp>
+#endif // BSF_NET_CATCH_CLOSE_FAILURE
 
 extern "C" {
-# include <unistd.h>
+#include <unistd.h>
 }
 
 namespace bsf::net {

@@ -10,14 +10,14 @@ namespace bsf::net {
 // Basic operations
 
 template<domain::domain D, type::type T>
-basic_acceptor_socket<D, T>::basic_acceptor_socket(address_type const& addr, bool non_blocking, bool close_on_exec):
-	super(non_blocking, close_on_exec) {
+basic_acceptor_socket<D, T>::basic_acceptor_socket(address_type const& addr, config conf):
+	super(conf) {
 	super::bind(addr);
 }
 
 template<domain::domain D, type::type T>
-basic_acceptor_socket<D, T>::basic_acceptor_socket(int backlog, address_type const& addr, bool non_blocking, bool close_on_exec):
-	super(non_blocking, close_on_exec) {
+basic_acceptor_socket<D, T>::basic_acceptor_socket(int backlog, address_type const& addr, config conf):
+	super(conf) {
 	super::bind(addr);
 	super::listen(backlog);
 }
@@ -44,15 +44,15 @@ basic_acceptor_socket<D, T>::listen(int backlog) const {
 
 template<domain::domain D, type::type T>
 typename basic_acceptor_socket<D, T>::super
-basic_acceptor_socket<D, T>::accept(bool non_blocking, bool close_on_exec) const {
+basic_acceptor_socket<D, T>::accept(config conf) const {
 	address_type	addr;
 
-	return (accept(addr, non_blocking, close_on_exec));
+	return (accept(addr, conf));
 }
 
 template<domain::domain D, type::type T>
 typename basic_acceptor_socket<D, T>::super
-basic_acceptor_socket<D, T>::accept(address_type& addr, bool non_blocking, bool close_on_exec) const {
+basic_acceptor_socket<D, T>::accept(address_type& addr, config conf) const {
 	socklen_t			size = addr.size();
 	handle::raw_type 	raw_handle = ::accept4(
 		this->_raw,

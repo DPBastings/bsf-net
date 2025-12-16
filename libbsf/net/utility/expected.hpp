@@ -64,6 +64,8 @@ public:
 	expected(expected<U, F>&&) noexcept;
 	template<typename U, typename F>
 	expected&	operator=(expected<U, F>&&) noexcept;
+	template<typename U = std::remove_cv_t<T>>
+	explicit(!std::is_convertible_v<U, T>) expected(U&&);
 	template<typename F>
 	explicit expected(unexpected<F> const&);
 	template<typename F>

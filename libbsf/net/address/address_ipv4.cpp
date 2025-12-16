@@ -6,8 +6,12 @@ using Address = bsf::net::address::address<bsf::net::domain::ipv4>;
 // Basic operations
 
 template<>
-Address::address(host_t host, port_t port):
-	_raw {
+Address::address() noexcept:
+	address{ 0, 0 } {}
+
+template<>
+Address::address(host_t host, port_t port) noexcept:
+	_raw{
 		.sin_family = static_cast<sa_family_t>(domain),
 		.sin_port = ::htons(port),
 		.sin_addr{ .s_addr = ::htonl(host) },

@@ -8,30 +8,20 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(Catch2)
 
-add_executable(BSF_NET-20-tests
-	tests.cpp
+add_executable(bsf-net_tests
+	address.test.cpp
+	protocol.test.cpp
 )
-target_include_directories(
-	BSF_NET-20-tests
+target_compile_features(bsf-net_tests
 	PUBLIC
-	../include
-)
-target_link_libraries(
-	BSF_NET-20-tests
+		cxx_std_20)
+target_link_libraries(bsf-net_tests
 	PRIVATE
-	Catch2::Catch2WithMain
+		Catch2::Catch2WithMain
+		bsf-net
 )
-target_link_libraries(
-	BSF_NET-20-tests
-	PRIVATE
-	BSF_NET-20
-)
-target_compile_features(
-	BSF_NET-20
-	PUBLIC
-	cxx_std_20)
 
 include(CTest)
 include(Catch)
-catch_discover_tests(BSF_NET-20-tests)
-add_test(NAME BSF_NET-20-tests COMMAND BSF_NET-20-tests)
+catch_discover_tests(bsf-net_tests)
+add_test(NAME bsf-net_tests COMMAND bsf-net_tests)

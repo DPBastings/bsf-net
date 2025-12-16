@@ -29,7 +29,7 @@ struct traits_base {
 	static constexpr bool	has_port = !std::same_as<Port, void_t>;
 }; // struct traits_base<...>
 
-template<domain::domain Domain>
+template<domain::domain D>
 struct traits;
 
 template<>
@@ -42,41 +42,39 @@ template<>
 struct traits<domain::local>:
 	traits_base<sockaddr_un, char const*, void_t, nullptr> {};
 
-template<domain::domain Domain>
+template<domain::domain D>
 class address {
 public:
-	static constexpr auto	domain = Domain;
-	using storage_t = traits<Domain>::storage_t;
-	using host_t = traits<Domain>::host_t;
-	using port_t = traits<Domain>::port_t;
+	static constexpr auto	domain = D;
+	using storage_t = traits<D>::storage_t;
+	using host_t = traits<D>::host_t;
+	using port_t = traits<D>::port_t;
 
 	address() noexcept;
-	address(host_t)
-		requires (!traits<Domain>::has_port);
-	address(host_t, port_t)
-		requires (traits<Domain>::has_port);
+	address(host_t) noexcept
+		requires (!traits<D>::has_port);
+	address(host_t, port_t) noexcept
+		requires (traits<D>::has_port);
 
 	static std::optional<address>	from_string(char const*) noexcept;
-	std::string							to_string() const;
+	std::string						to_string() const;
 
 	host_t	host() const noexcept;
 	port_t	port() const noexcept;
-private:
-	address(storage_t, socklen_t);
 
 	sockaddr*		raw_ptr() noexcept;
 	sockaddr const*	raw_ptr() const noexcept;
 	socklen_t*		size_ptr() noexcept;
 	socklen_t		size() const noexcept;
-
+private:
 	static constexpr socklen_t	_max_size = sizeof(storage_t);
 
 	storage_t	_raw;
-	socklen_t	_size = 0;
+	socklen_t	_size = sizeof(storage_t);
 }; // class address
 
-template<domain::domain Domain>
-std::string	to_string(address<Domain> const&);
+template<domain::domain D>
+std::string	to_string(address<D> const&);
 
 }; // namespace bsf::net::address
 

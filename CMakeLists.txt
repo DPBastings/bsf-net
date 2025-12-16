@@ -30,3 +30,5 @@ target_compile_options(bsf-net
 	PUBLIC
 		-Wall -Wextra -Werror -g
 )
+
+add_subdirectory(test)

@@ -76,45 +76,115 @@ send_error	get_send_error() noexcept;
 
 };
 
-template<domain::domain Domain, type::type Type>
+namespace option {
+
+enum option {
+	is_listening = SO_ACCEPTCONN,
+	// SO_ATTACH_FILTER
+	// SO_ATTACH_BPF
+	// SO_ATTACH_REUSEPORT_CBPF
+	// SO_ATTACH_REUSEPORT_EBPF
+	// SO_BINDTODEVICE
+	// SO_BROADCAST
+	// SO_BSDCOMPAT
+	// SO_DEBUG
+	// SO_DETACH_FILTER
+	// SO_DETACH_BPF
+	// SO_DOMAIN
+	error = SO_ERROR,
+	dont_route = SO_DONTROUTE,
+	incoming_cpu = SO_INCOMING_CPU,
+	// SO_INCOMING_NAPI_ID
+	keep_alive = SO_KEEPALIVE,
+	// SO_LINGER
+	// SO_LOCK_FILTER
+	// SO_MARK
+	inline_oob = SO_OOBINLINE,
+	// SO_PASSCRED
+	// SO_PASSSEC
+	// SO_PEEK_OFF
+	// SO_PEERCRED
+	// SO_PEERSEC
+	priority = SO_PRIORITY,
+	protocol = SO_PROTOCOL,
+	recv_buffer_size = SO_RCVBUF,
+	// SO_RCVBUFFORCE
+	// SO_RCV_LOWAT
+	// SO_SND_LOWAT
+	// SO_RCVTIMEO,
+	// SO_SNDTIMEO,
+	reuse_address = SO_REUSEADDR,
+	reuse_port = SO_REUSEPORT,
+	// SO_RXQ_OVFL
+	// SO_SELECT_ERR_QUEUE
+	send_buffer_size = SO_SNDBUF,
+	// SO_SNDBUF_FORCE
+	// SO_TIMESTAMP
+	// SO_TIMESTAMPNS
+	// SO_TYPE
+	// SO_BUSY_POLL
+};
+
+template<typename T, bool IsWriteable, bool IsReadable = true>
+struct traits_base {
+	using value_type = T;
+	using api_type = std::conditional_t<std::is_same_v<T, bool>, int, T>;
+
+	static constexpr bool	is_writeable = IsWriteable;
+	static constexpr bool	is_readable = IsReadable;
+};
+
+template<option Opt>
+struct traits;
+
+template<>
+struct traits<is_listening>: traits_base<bool, false> {};
+template<>
+struct traits<error>: traits_base<int, false> {};
+template<>
+struct traits<dont_route>: traits_base<bool, true> {};
+template<>
+struct traits<incoming_cpu>: traits_base<int, true /* OS-dependent */> {};
+template<>
+struct traits<keep_alive>: traits_base<bool, true> {};
+template<>
+struct traits<inline_oob>: traits_base<bool, true> {};
+template<>
+struct traits<priority>: traits_base<int, true> {};
+template<>
+struct traits<protocol>: traits_base<int, false> {};
+template<>
+struct traits<recv_buffer_size>: traits_base<int, true> {};
+template<>
+struct traits<reuse_address>: traits_base<bool, true> {};
+template<>
+struct traits<reuse_port>: traits_base<bool, true> {};
+template<>
+struct traits<send_buffer_size>: traits_base<int, true> {};
+
+}; // namespace option
+
+template<domain::domain D, type::type T>
 class socket_base: public handle {
 public:
-	using address_t = address::address<Domain>;
-	template<int O, typename V>
-	class option_reference;
-
-	template<int O>
-	using bool_option = option_reference<O, bool>;
-	template<int O>
-	using int_option = option_reference<O, int>;
-	template<int O>
-	using time_option = option_reference<O, timeval>;
+	using address_t = address::address<D>;
 
 	explicit socket_base() = default;
 
 	static constexpr auto	domain() noexcept;
 	static constexpr auto	type() noexcept;
-	int						protocol() const noexcept;
+	int						protocol() const;
+	int						error() const;
 
-	address_t	address() const;
-	address_t	peer_address() const;
-	int			error() const;
+	std::optional<address_t>	address() const;
+	std::optional<address_t>	peer_address() const;
 
-	bool_option<SO_REUSEADDR>	reuse_address() const
-		requires (domain::traits<Domain>::is_inet);
-	bool_option<SO_REUSEPORT>	reuse_port() const
-		requires (domain::traits<Domain>::is_inet);
-	bool_option<SO_DONTROUTE>	dont_route() const;
-	int_option<SO_INCOMING_CPU>	cpu_affinity() const;
-	bool_option<SO_KEEPALIVE>	keep_alive() const;
-	bool_option<SO_OOBINLINE>	inline_oob() const;
-	int_option<SO_PRIORITY>		priority() const;
-	int_option<SO_RCVBUF>		recv_buffer_size() const;
-	int_option<SO_SNDBUF>		send_buffer_size() const;
-	int_option<SO_RCVLOWAT>		recv_minimum() const;
-	int_option<SO_SNDLOWAT>		send_minimum() const;
-	time_option<SO_RCVTIMEO>	recv_timeout() const;
-	time_option<SO_SNDTIMEO>	send_timeout() const;
+	template<option::option Opt, int Level = SOL_SOCKET>
+	auto	option() const
+		requires (option::traits<Opt>::is_readable);
+	template<option::option Opt, int Level = SOL_SOCKET>
+	void	option(option::traits<Opt>::value_type) const
+		requires (option::traits<Opt>::is_writeable);
 
 	void	bind(address_t const&) const;
 	void	connect(address_t const&) const;
@@ -126,31 +196,12 @@ public:
 
 	static std::optional<socket_base>			make(config conf);
 	static std::pair<socket_base, socket_base>	make_pair(config conf)
-		requires (Domain == domain::local);
+		requires (D == domain::local);
 private:
-	friend class address::address<Domain>;
-	template<int O, typename V>
-	friend class option_reference;
+	friend class address::address<D>;
 
 	socket_base(raw_t);
-}; // class socket_base<Domain, Type>
-
-template<domain::domain Domain, type::type Type>
-template<int O, typename V>
-class socket_base<Domain, Type>::option_reference {
-public:
-	using enclosing = socket_base<Domain, Type>;
-
-	void operator=(V) const;
-
-	operator V() const;
-private:
-	friend enclosing;
-
-	option_reference(enclosing::raw_t);
-
-	enclosing::raw_t	_raw_socket;
-}; // class option_reference
+}; // class socket_base<D, T>
 
 }; // namespace bsf::net::socket
 

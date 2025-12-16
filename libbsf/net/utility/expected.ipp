@@ -80,6 +80,12 @@ expected<T, E>::move(expected<U, F>&& that) noexcept {
 	}
 }
 
+template<typename T, typename E>
+template<typename U>
+expected<T, E>::expected(U&& that):
+	_value{ std::forward<U>(that) },
+	_has_value{ true } {}
+
 /// @brief Construct an
 template<typename T, typename E>
 template<typename F>

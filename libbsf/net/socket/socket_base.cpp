@@ -6,7 +6,7 @@ namespace bsf::net::socket::detail {
 recv_error
 get_recv_error() noexcept {
 	switch (errno) {
-	case EAGAIN:
+	// case EAGAIN: // ***TODO*** EAGAIN and EWOULDBLOCK can be the same. Find a way to suppress compiler warnings.
 	case EWOULDBLOCK: return (recv_error::would_block);
 	case EBADF: return (recv_error::uninitialized);
 	case ECONNREFUSED: return (recv_error::connection_refused);
@@ -24,7 +24,7 @@ send_error
 get_send_error() noexcept {
 	switch (errno) {
 	case EACCES: return (send_error::access_violation);
-	case EAGAIN: // Has a slightly different meaning for Internet UDP sockets.
+	// case EAGAIN: // Has a slightly different meaning for Internet UDP sockets.
 	case EWOULDBLOCK: return (send_error::would_block);
 	// EALREADY
 	case EBADF: return (send_error::uninitialized);
