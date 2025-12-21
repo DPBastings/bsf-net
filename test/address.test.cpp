@@ -31,6 +31,5 @@ TEST_CASE("ipv4 socket default address", "[socket ipv4 address]") {
 	Socket	s;
 	auto	addr = s.address();
 
-	REQUIRE(addr);
-	REQUIRE(to_string(*addr) == "0.0.0.0:0");
+	REQUIRE(!addr);
 }

@@ -31,13 +31,18 @@ handle::operator=(handle&& that) noexcept {
 
 // Public methods
 
+bool
+handle::is_open() const noexcept {
+	return (_raw != null);
+}
+
 handle::operator bool() const noexcept {
 	return (is_open());
 }
 
-bool
-handle::is_open() const noexcept {
-	return (_raw != null);
+handle::raw_t
+handle::raw() const noexcept {
+	return (_raw);
 }
 
 handle::raw_t

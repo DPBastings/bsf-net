@@ -14,9 +14,10 @@ using namespace bsf::net;
 TEST_CASE("ipv4 tcp socket protocol", "[socket ipv4 tcp protocol]") {
 	using Socket = socket::socket_base<domain::ipv4, socket::type::stream>;
 	
-	Socket	s;
+	auto	s = Socket::make(socket::config{});
+	REQUIRE(s);
 
-	protoent*	ent = ::getprotobynumber(s.protocol());
+	protoent*	ent = ::getprotobynumber(s->protocol());
 	REQUIRE(strcmp(ent->p_name, "tcp") == 0);
 }
 
@@ -24,9 +25,10 @@ TEST_CASE("ipv4 udp socket protocol", "[socket ipv4 udp protocol]") {
 	using Socket
 		= socket::socket_base<domain::ipv4, socket::type::datagram>;
 		
-	Socket	s;
+	auto	s = Socket::make(socket::config{});
+	REQUIRE(s);
 
-	protoent*	ent = ::getprotobynumber(s.protocol());
+	protoent*	ent = ::getprotobynumber(s->protocol());
 	REQUIRE(strcmp(ent->p_name, "udp") == 0);
 }
 

@@ -8,6 +8,16 @@ extern "C" {
 
 namespace bsf::net::socket {
 
+/**
+ * @brief Create a socket from a raw file descriptor.
+ * @param raw A raw socket handle.
+ * @pre The file descriptor must refer to a valid socket of the appropriate
+ * configuration.
+ */ 
+template<domain::domain D, type::type T>
+socket_base<D, T>::socket_base(raw_t raw):
+	handle{ raw } {}
+
 /// @brief Create a configured socket.
 template<domain::domain D, type::type T>
 std::optional<socket_base<D, T>>
@@ -15,8 +25,8 @@ socket_base<D, T>::make(config conf) {
 	raw_t	raw = ::socket(
 		static_cast<int>(D),
 		static_cast<int>(T) | conf.to_bitmask(),
-		0)
-	;
+		0 // ***TODO*** Support different protocols.
+	);
 	if (raw == -1) return (std::nullopt);
 	return (socket_base{ raw });
 }
@@ -35,8 +45,8 @@ socket_base<D, T>::make_pair(config conf)
 		fds
 	) == -1) throw (exception("socketpair"));
 	return (std::make_pair(
-		socket_base(fds[0]),
-		socket_base(fds[1])
+		socket_base{ fds[0] },
+		socket_base{ fds[1] }
 	));
 }
 
