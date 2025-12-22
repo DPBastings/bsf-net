@@ -1,70 +1,64 @@
-#ifndef BSF_NET_ACCEPTOR_SOCKET_TPP
-# define BSF_NET_ACCEPTOR_SOCKET_TPP
+#ifndef BSF_NET_SOCKET_ACCEPTOR_IPP
+# define BSF_NET_SOCKET_ACCEPTOR_IPP
 
-# ifndef BSF_NET_ACCEPTOR_SOCKET_HPP
-#  error "include in acceptor_socket_base.hpp"
-# endif // BSF_NET_ACCEPTOR_SOCKET_HPP
-
-namespace bsf::net {
+namespace bsf::net::socket {
 
 // Basic operations
 
+/// @brief Create an acceptor from a socket base.
+/// @post The acceptor will retain the base's address binding and listening
+/// status.
 template<domain::domain D, type::type T>
-basic_acceptor_socket<D, T>::basic_acceptor_socket(address_type const& addr, config conf):
-	super(conf) {
-	super::bind(addr);
-}
+acceptor<D, T>::acceptor(Base&& base) noexcept:
+	socket_base<D, T>{ std::move(base) } {}
 
-template<domain::domain D, type::type T>
-basic_acceptor_socket<D, T>::basic_acceptor_socket(int backlog, address_type const& addr, config conf):
-	super(conf) {
-	super::bind(addr);
-	super::listen(backlog);
-}
-
-// Accessor methods
+// Factories
 
 template<domain::domain D, type::type T>
-bool
-basic_acceptor_socket<D, T>::is_listening() const {
-	using option_type = typename super::template bool_option<SO_ACCEPTCONN>;
+std::optional<acceptor<D, T>>
+acceptor<D, T>::make(address_t const& addr, config conf, int backlog) noexcept {
+	auto	base = make_socket<D, T>(addr, conf);
 
-	return (option_type(this->_raw));
+	if (!base) return (std::nullopt);
+	acceptor	res{ std::move(*base) };
+	res.listen(backlog);
+	return (res);
 }
 
 // I/O methods
 
 template<domain::domain D, type::type T>
-void
-basic_acceptor_socket<D, T>::listen(int backlog) const {
-	if (::listen(this->_raw, backlog) == -1) {
-		throw (exception("listen"));
-	}
-}
-
-template<domain::domain D, type::type T>
-typename basic_acceptor_socket<D, T>::super
-basic_acceptor_socket<D, T>::accept(config conf) const {
-	address_type	addr;
+acceptor<D, T>::accept_result
+acceptor<D, T>::accept(config conf) const {
+	address_t	addr;
 
 	return (accept(addr, conf));
 }
 
 template<domain::domain D, type::type T>
-typename basic_acceptor_socket<D, T>::super
-basic_acceptor_socket<D, T>::accept(address_type& addr, config conf) const {
+acceptor<D, T>::accept_result
+acceptor<D, T>::accept(address_t& addr, config conf) const {
 	socklen_t			size = addr.size();
-	handle::raw_type 	raw_handle = ::accept4(
+	handle::raw_t const	raw = ::accept4(
 		this->_raw,
 		addr.raw(),
 		&size,
-		(non_blocking ? SOCK_NONBLOCK : 0) | (close_on_exec ? SOCK_CLOEXEC : 0));
+		conf.to_bitmask());
 
-	if (raw_handle == handle::null)
-		throw (exception("accept"));
-	return (super(raw_handle));
+	if (raw == handle::null) return (detail::get_accept_error());
+	return (socket_t{ raw });
 }
 
-}; // namespace bsf::net
+// Non-member functions
 
-#endif // BSF_NET_ACCEPTOR_SOCKET_TPP
+template<domain::domain D, type::type T>
+std::optional<acceptor<D, T>>
+make_acceptor(address::address<D> const& addr, config conf, int backlog) noexcept {
+	using Acceptor = acceptor<D, T>;
+
+	return (Acceptor::make(addr, conf, backlog));
+}
+
+}; // namespace bsf::net::socket
+
+#endif // BSF_NET_SOCKET_ACCEPTOR_IPP

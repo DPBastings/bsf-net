@@ -171,16 +171,16 @@ public:
 
 	explicit socket_base() = default;
 
-	static constexpr auto	domain() noexcept;
-	static constexpr auto	type() noexcept;
-	int						protocol() const;
-	int						error() const;
+	[[nodiscard]] static constexpr auto	domain() noexcept;
+	[[nodiscard]] static constexpr auto	type() noexcept;
+	[[nodiscard]] int					protocol() const;
+	[[nodiscard]] int					error() const;
 
-	std::optional<address_t>	address() const;
-	std::optional<address_t>	peer_address() const;
+	[[nodiscard]] std::optional<address_t>	address() const;
+	[[nodiscard]] std::optional<address_t>	peer_address() const;
 
 	template<option::option Opt, int Level = SOL_SOCKET>
-	auto	option() const
+	[[nodiscard]] auto	option() const
 		requires (option::traits<Opt>::is_readable);
 	template<option::option Opt, int Level = SOL_SOCKET>
 	void	option(option::traits<Opt>::value_type) const
@@ -189,19 +189,25 @@ public:
 	void	bind(address_t const&) const;
 	void	connect(address_t const&) const;
 
-	recv_result	recv(void*, std::size_t) const;
-	recv_result	recv(void*, std::size_t, recv_flag) const;
-	send_result	send(void const*, std::size_t) const;
-	send_result	send(void const*, std::size_t, send_flag) const;
+	[[nodiscard]] recv_result	recv(void*, std::size_t) const;
+	[[nodiscard]] recv_result	recv(void*, std::size_t, recv_flag) const;
+	[[nodiscard]] send_result	send(void const*, std::size_t) const;
+	[[nodiscard]] send_result	send(void const*, std::size_t, send_flag) const;
 
-	static std::optional<socket_base>			make(config conf);
-	static std::pair<socket_base, socket_base>	make_pair(config conf)
+	[[nodiscard]] static std::optional<socket_base>				make(config);
+	[[nodiscard]] static std::pair<socket_base, socket_base>	make_pair(config)
 		requires (D == domain::local);
+protected:
+	bool	listen(int) const noexcept;
 private:
 	friend class address::address<D>;
 
 	socket_base(raw_t);
 }; // class socket_base<D, T>
+
+template<domain::domain D, type::type T>
+[[nodiscard]] std::optional<socket_base<D, T>>
+make_socket(address::address<D> const&, config) noexcept;
 
 }; // namespace bsf::net::socket
 

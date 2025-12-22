@@ -17,14 +17,14 @@ public:
 	handle(handle const&) = delete;
 	handle&	operator=(handle const&) = delete;
 
-	bool	is_open() const noexcept;
+	[[nodiscard]] bool	is_open() const noexcept;
 	operator bool() const noexcept;
 
-	raw_t	release() noexcept;
-	void	close();
-protected:
-	raw_t&	raw() noexcept;
-	raw_t	raw() const noexcept;
+	[[nodiscard]] raw_t	release() noexcept;
+	void				close();
+
+	[[nodiscard]] raw_t&	raw() noexcept;
+	[[nodiscard]] raw_t		raw() const noexcept;
 private:
 	raw_t	_raw = null;
 }; // class handle

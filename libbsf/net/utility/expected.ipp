@@ -106,19 +106,17 @@ expected<T, E>::operator=(unexpected<F> const& that) {
 
 /// @brief Construct an
 template<typename T, typename E>
-template<typename F>
-expected<T, E>::expected(unexpected<F>&& that) noexcept:
+expected<T, E>::expected(unexpected<E>&& that) noexcept:
 	_has_value{ false } {
-	move(that);
+	move(std::forward<unexpected<E>>(that));
 }
 
 template<typename T, typename E>
-template<typename F>
 expected<T, E>&
-expected<T, E>::operator=(unexpected<F>&& that) noexcept {
+expected<T, E>::operator=(unexpected<E>&& that) noexcept {
 	destroy();
 	_has_value = false;
-	_error = std::move(that);
+	_error = std::forward<E>(that.error());
 	return (*this);
 }
 
@@ -206,6 +204,39 @@ expected<T, E>::destroy() noexcept {
 	} else {
 		_error.~E();
 	}
+}
+
+
+
+template<typename E>
+template<typename T>
+unexpected<E>::unexpected(T&& that) noexcept:
+	_error(std::forward<T>(that)) {}
+
+template<typename E>
+template<typename... Args>
+unexpected<E>::unexpected(Args&&... args):
+	_error(std::forward<Args>(args)...) {}
+
+template<typename E>
+E const&
+unexpected<E>::error() const& noexcept {
+	return (_error);
+}
+template<typename E>
+E&
+unexpected<E>::error() & noexcept {
+	return (_error);
+}
+template<typename E>
+E const&&
+unexpected<E>::error() const&& noexcept {
+	return (std::move(_error));
+}
+template<typename E>
+E&&
+unexpected<E>::error() && noexcept {
+	return (std::move(_error));
 }
 
 }; // namespace bsf

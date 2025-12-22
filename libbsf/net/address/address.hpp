@@ -56,11 +56,11 @@ public:
 	address(host_t, port_t) noexcept
 		requires (traits<D>::has_port);
 
-	static std::optional<address>	from_string(char const*) noexcept;
-	std::string						to_string() const;
+	[[nodiscard]] static std::optional<address>	from_string(char const*) noexcept;
+	[[nodiscard]] std::string					to_string() const;
 
-	host_t	host() const noexcept;
-	port_t	port() const noexcept;
+	[[nodiscard]] host_t	host() const noexcept;
+	[[nodiscard]] port_t	port() const noexcept;
 
 	sockaddr*		raw_ptr() noexcept;
 	sockaddr const*	raw_ptr() const noexcept;
@@ -74,7 +74,8 @@ private:
 }; // class address
 
 template<domain::domain D>
-std::string	to_string(address<D> const&);
+[[nodiscard]] std::string
+to_string(address<D> const&);
 
 }; // namespace bsf::net::address
 

@@ -33,7 +33,7 @@ socket_base<D, T>::make(config conf) {
 
 /// @brief Create a pair of local sockets.
 template<domain::domain D, type::type T>
-std::pair<socket_base<D, T>,socket_base<D, T>>
+std::pair<socket_base<D, T>, socket_base<D, T>>
 socket_base<D, T>::make_pair(config conf)
 	requires (D == domain::local) {
 	raw_t	fds[2];
@@ -134,19 +134,21 @@ socket_base<D, T>::option(option::traits<Opt>::value_type value) const
 // Peers
 
 template<domain::domain D, type::type T>
-void
+bool
 socket_base<D, T>::bind(address_t const& addr) const {
-	if (::bind(_raw, addr.raw_ptr(), addr.size()) == -1) {
-		throw (exception("bind"));
-	}
+	return (::bind(raw(), addr.raw_ptr(), addr.size()) != -1);
 }
 
 template<domain::domain D, type::type T>
-void
+bool
 socket_base<D, T>::connect(address_t const& addr) const {
-	if (::connect(_raw, addr.raw_ptr(), addr.size() == -1)) {
-		throw (exception("connect"));
-	}
+	return (::connect(raw(), addr.raw_ptr(), addr.size() != -1));
+}
+
+template<domain::domain D, type::type T>
+bool
+socket_base<D, T>::listen(int backlog) const noexcept {
+	return (::listen(raw(), backlog) != -1);
 }
 
 // I/O operations
@@ -184,6 +186,18 @@ socket_base<D, T>::send(void const* data, std::size_t length, send_flag flag) co
 	return (static_cast<std::size_t>(byte_count));
 }
 
-}; // namespace bsf::net
+
+
+template<domain::domain D, type::type T>
+std::optional<socket_base<D, T>>
+make_socket(address::address<D> const& addr, config conf) noexcept {
+	auto	res = socket_base<D, T>::make(conf);
+
+	if (!res) return (std::nullopt);
+	res->bind(addr);
+	return (res);
+}
+
+}; // namespace bsf::net::socket
 
 #endif // BSF_NET_SOCKET_SOCKET_BASE_IPP

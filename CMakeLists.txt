@@ -14,6 +14,9 @@ add_library(bsf-net
 	libbsf/net/address/address_ipv4.cpp
 	libbsf/net/address/address_ipv6.cpp
 	# libbsf/net/address/address_local.cpp
+	libbsf/net/async/event.cpp
+	libbsf/net/async/poller.cpp
+	libbsf/net/socket/acceptor.cpp
 	libbsf/net/socket/socket_base.cpp
 	libbsf/net/utility/except.cpp
 	libbsf/net/utility/handle.cpp

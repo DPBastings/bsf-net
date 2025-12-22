@@ -10,11 +10,16 @@ template<typename E>
 class unexpected {
 public:
 	template<typename T = E>
-	unexpected(E&&) noexcept;
+	unexpected(T&&) noexcept;
 	template<typename... Args>
 	unexpected(Args&&...);
+
+	E const&	error() const& noexcept;
+	E&			error() & noexcept;
+	E const&&	error() const&& noexcept;
+	E&&			error() && noexcept;
 private:
-	E	obj{};
+	E	_error{};
 }; // class unexpected<E>
 
 
@@ -70,10 +75,8 @@ public:
 	explicit expected(unexpected<F> const&);
 	template<typename F>
 	expected&	operator=(unexpected<F> const&);
-	template<typename F>
-	explicit expected(unexpected<F>&&) noexcept;
-	template<typename F>
-	expected&	operator=(unexpected<F>&&) noexcept;
+	expected(unexpected<E>&&) noexcept;
+	expected&	operator=(unexpected<E>&&) noexcept;
 
 	T const*	operator->() const noexcept;
 	T*			operator->() noexcept;
@@ -92,6 +95,7 @@ private:
 	void	copy(expected<U, F> const&);
 	template<typename U, typename F>
 	void	move(expected<U, F>&&) noexcept;
+	void	move(unexpected<E>&&) noexcept;
 	void	destroy() noexcept;
 
 	union {
