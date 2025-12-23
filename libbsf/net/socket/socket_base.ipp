@@ -134,15 +134,21 @@ socket_base<D, T>::option(option::traits<Opt>::value_type value) const
 // Peers
 
 template<domain::domain D, type::type T>
-bool
+bind_result
 socket_base<D, T>::bind(address_t const& addr) const {
-	return (::bind(raw(), addr.raw_ptr(), addr.size()) != -1);
+	if (::bind(raw(), addr.raw_ptr(), addr.size()) == -1) {
+		return (bsf::unexpected<bind_error>(detail::get_bind_error()));
+	}
+	return (true);
 }
 
 template<domain::domain D, type::type T>
-bool
+connect_result
 socket_base<D, T>::connect(address_t const& addr) const {
-	return (::connect(raw(), addr.raw_ptr(), addr.size() != -1));
+	if (::connect(raw(), addr.raw_ptr(), addr.size() == -1)) {
+		return (bsf::unexpected<connect_error>(detail::get_connect_error()));
+	}
+	return (true);
 }
 
 template<domain::domain D, type::type T>
@@ -194,7 +200,7 @@ make_socket(address::address<D> const& addr, config conf) noexcept {
 	auto	res = socket_base<D, T>::make(conf);
 
 	if (!res) return (std::nullopt);
-	res->bind(addr);
+	REQUIRE(res->bind(addr));
 	return (res);
 }
 

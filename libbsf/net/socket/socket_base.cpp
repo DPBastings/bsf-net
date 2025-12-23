@@ -43,4 +43,47 @@ get_send_error() noexcept {
 	}
 }
 
-};
+bind_error
+get_bind_error() noexcept {
+	switch (errno) {
+	case EACCES: return (bind_error::access_violation);
+	case EADDRINUSE: return (bind_error::address_in_use);
+	case EBADF: return (bind_error::uninitialized);
+	case EINVAL: return (bind_error::already_bound);
+	// EINVAL for invalid address is compile-time eliminated
+	case ENOTSOCK: return (bind_error::uninitialized);
+	case EADDRNOTAVAIL:
+	case ELOOP:
+	case ENAMETOOLONG:
+	case ENOENT:
+	case ENOTDIR: return (bind_error::bad_address); // Unix sockets
+	case ENOMEM: return (bind_error::out_of_resources);
+	case EROFS: return (bind_error::access_violation);
+	default: __builtin_unreachable();
+	}
+}
+
+connect_error
+get_connect_error() noexcept {
+	switch (errno) {
+	case EACCES: return (connect_error::access_violation);
+	case EPERM: return (connect_error::access_violation);
+	case EADDRINUSE: return (connect_error::address_in_use);
+	case EADDRNOTAVAIL: return (connect_error::address_unavailable);
+	// EAFNOSUPPORT (enforced at compile time)
+	case EAGAIN: return (connect_error::would_block);
+	case EALREADY: return (connect_error::busy);\
+	case EBADF: return (connect_error::uninitialized);
+	case ECONNREFUSED: return (connect_error::refused);
+	// EFAULT
+	case EINPROGRESS: return (connect_error::busy);
+	case EINTR: return (connect_error::interrupted);
+	case EISCONN: return (connect_error::already_connected);
+	case ENOTSOCK: return (connect_error::uninitialized);
+	// EPROTOTYPE (enforced at compile time)
+	case ETIMEDOUT: return (connect_error::timeout);
+	default: __builtin_unreachable();
+	}
+}
+
+}; // namespace bsf::net::socket::detail

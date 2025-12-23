@@ -43,6 +43,7 @@ enum class send_flag: unsigned int {
 	fast_open = MSG_FASTOPEN,
 }; // enum class send_flag
 
+
 enum class recv_error {
 	uninitialized,
 	would_block,
@@ -51,7 +52,6 @@ enum class recv_error {
 	out_of_memory,
 	not_connected,
 }; // enum class recv_error
-
 using recv_result = bsf::expected<std::size_t, recv_error>;
 
 enum class send_error {
@@ -66,13 +66,39 @@ enum class send_error {
 	out_of_memory,
 	// ...
 }; // enum class send_error
-
 using send_result = bsf::expected<std::size_t, send_error>;
+
+enum class bind_error {
+	uninitialized,
+	access_violation,
+	address_in_use,
+	already_bound,
+	bad_address,
+	out_of_resources,
+}; // enum class send_error
+using bind_result = bsf::expected<bool, bind_error>;
+
+enum class connect_error {
+	uninitialized,
+	access_violation,
+	address_in_use,
+	address_unavailable,
+	would_block,
+	busy,
+	refused,
+	interrupted,
+	already_connected,
+	network_unreachable,
+	timeout,
+}; // enum class connect_error
+using connect_result = bsf::expected<bool, connect_error>;
 
 namespace detail {
 
-recv_error	get_recv_error() noexcept;
-send_error	get_send_error() noexcept;
+recv_error		get_recv_error() noexcept;
+send_error		get_send_error() noexcept;
+bind_error		get_bind_error() noexcept;
+connect_error	get_connect_error() noexcept;
 
 };
 
@@ -186,8 +212,9 @@ public:
 	void	option(option::traits<Opt>::value_type) const
 		requires (option::traits<Opt>::is_writeable);
 
-	void	bind(address_t const&) const;
-	void	connect(address_t const&) const;
+
+	[[nodiscard]] bind_result		bind(address_t const&) const;
+	[[nodiscard]] connect_result	connect(address_t const&) const;
 
 	[[nodiscard]] recv_result	recv(void*, std::size_t) const;
 	[[nodiscard]] recv_result	recv(void*, std::size_t, recv_flag) const;
