@@ -8,7 +8,7 @@ extern "C" {
 namespace bsf::net::domain {
 
 enum domain {
-	local = AF_LOCAL,
+	unix = AF_UNIX,
 	ipv4 = AF_INET,
 	ipv6 = AF_INET6,
 };
@@ -22,7 +22,7 @@ template<domain D>
 struct traits;
 
 template<>
-struct traits<domain::local>:
+struct traits<domain::unix>:
 	traits_base<false> {};
 
 template<>

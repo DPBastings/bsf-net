@@ -1,6 +1,6 @@
-#include <libbsf/net/address/address.hpp>
+#include <libbsf/net/address/unix.hpp>
 
-using Address = bsf::net::address::address<bsf::net::domain::local>;
+using Address = bsf::net::address<bsf::net::domain::unix>;
 
 template<>
 Address::address(std::string const&):

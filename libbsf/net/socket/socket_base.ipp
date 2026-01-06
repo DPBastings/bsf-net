@@ -35,7 +35,7 @@ socket_base<D, T>::make(config conf) {
 template<domain::domain D, type::type T>
 std::pair<socket_base<D, T>, socket_base<D, T>>
 socket_base<D, T>::make_pair(config conf)
-	requires (D == domain::local) {
+	requires (D == domain::unix) {
 	raw_t	fds[2];
 
 	if (::socketpair(
@@ -73,9 +73,9 @@ socket_base<D, T>::protocol() const {
 
 template<domain::domain D, type::type T>
 std::optional<typename socket_base<D, T>::address_t>
-socket_base<D, T>::address() const {
+socket_base<D, T>::local_address() const {
 	address_t	addr;
-	if (::getsockname(raw(), addr.raw_ptr(), addr.size_ptr()) == -1) {
+	if (::getsockname(raw(), addr.data(), addr.size()) == -1) {
 		return (std::nullopt);
 	}
 	return (addr);
@@ -85,7 +85,7 @@ template<domain::domain D, type::type T>
 std::optional<typename socket_base<D, T>::address_t>
 socket_base<D, T>::peer_address() const {
 	address_t	addr;
-	if (::getpeername(raw(), addr.raw_ptr(), addr.size_ptr()) == -1) {
+	if (::getpeername(raw(), addr.data(), addr.size()) == -1) {
 		return (std::nullopt);
 	}
 	return (addr);
@@ -136,7 +136,7 @@ socket_base<D, T>::option(option::traits<Opt>::value_type value) const
 template<domain::domain D, type::type T>
 bind_result
 socket_base<D, T>::bind(address_t const& addr) const {
-	if (::bind(raw(), addr.raw_ptr(), addr.size()) == -1) {
+	if (::bind(raw(), addr.data(), addr.size()) == -1) {
 		return (bsf::unexpected<bind_error>(detail::get_bind_error()));
 	}
 	return (true);
@@ -145,7 +145,7 @@ socket_base<D, T>::bind(address_t const& addr) const {
 template<domain::domain D, type::type T>
 connect_result
 socket_base<D, T>::connect(address_t const& addr) const {
-	if (::connect(raw(), addr.raw_ptr(), addr.size() == -1)) {
+	if (::connect(raw(), addr.data(), addr.size() == -1)) {
 		return (bsf::unexpected<connect_error>(detail::get_connect_error()));
 	}
 	return (true);
@@ -196,7 +196,7 @@ socket_base<D, T>::send(void const* data, std::size_t length, send_flag flag) co
 
 template<domain::domain D, type::type T>
 std::optional<socket_base<D, T>>
-make_socket(address::address<D> const& addr, config conf) noexcept {
+make_socket(address<D> const& addr, config conf) noexcept {
 	auto	res = socket_base<D, T>::make(conf);
 
 	if (!res) return (std::nullopt);

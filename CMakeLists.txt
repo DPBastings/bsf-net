@@ -11,8 +11,8 @@ project(
 	LANGUAGES CXX)
 
 add_library(bsf-net
-	libbsf/net/address/address_ipv4.cpp
-	libbsf/net/address/address_ipv6.cpp
+	libbsf/net/address/ipv4.cpp
+	libbsf/net/address/ipv6.cpp
 	# libbsf/net/address/address_local.cpp
 	libbsf/net/async/event.cpp
 	libbsf/net/async/poller.cpp

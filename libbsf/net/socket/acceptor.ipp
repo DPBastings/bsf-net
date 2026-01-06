@@ -53,7 +53,7 @@ acceptor<D, T>::accept(address_t& addr, config conf) const {
 
 template<domain::domain D, type::type T>
 std::optional<acceptor<D, T>>
-make_acceptor(address::address<D> const& addr, config conf, int backlog) noexcept {
+make_acceptor(address<D> const& addr, config conf, int backlog) noexcept {
 	using Acceptor = acceptor<D, T>;
 
 	return (Acceptor::make(addr, conf, backlog));

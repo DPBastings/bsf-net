@@ -3,7 +3,7 @@
 
 # include <libbsf/net/domain.hpp> // net::domain::*
 # include <libbsf/net/socket/type.hpp> // net::socket::type::*
-# include <libbsf/net/address/address.hpp> // net::address::*
+# include <libbsf/net/address/address.hpp> // net::address
 # include <libbsf/net/utility/handle.hpp> // net::handle
 # include <libbsf/net/utility/expected.hpp> // bsf::expected
 
@@ -193,7 +193,7 @@ struct traits<send_buffer_size>: traits_base<int, true> {};
 template<domain::domain D, type::type T>
 class socket_base: public handle {
 public:
-	using address_t = address::address<D>;
+	using address_t = address<D>;
 
 	explicit socket_base() = default;
 
@@ -202,7 +202,7 @@ public:
 	[[nodiscard]] int					protocol() const;
 	[[nodiscard]] int					error() const;
 
-	[[nodiscard]] std::optional<address_t>	address() const;
+	[[nodiscard]] std::optional<address_t>	local_address() const;
 	[[nodiscard]] std::optional<address_t>	peer_address() const;
 
 	template<option::option Opt, int Level = SOL_SOCKET>
@@ -223,18 +223,18 @@ public:
 
 	[[nodiscard]] static std::optional<socket_base>				make(config);
 	[[nodiscard]] static std::pair<socket_base, socket_base>	make_pair(config)
-		requires (D == domain::local);
+		requires (D == domain::unix);
 protected:
 	bool	listen(int) const noexcept;
 private:
-	friend class address::address<D>;
+	friend class address<D>;
 
 	socket_base(raw_t);
 }; // class socket_base<D, T>
 
 template<domain::domain D, type::type T>
 [[nodiscard]] std::optional<socket_base<D, T>>
-make_socket(address::address<D> const&, config) noexcept;
+make_socket(address<D> const&, config) noexcept;
 
 }; // namespace bsf::net::socket
 

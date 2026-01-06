@@ -53,7 +53,7 @@ private:
 
 template<domain::domain D, type::type T>
 [[nodiscard]] std::optional<acceptor<D, T>>
-make_acceptor(address::address<D> const&, config, int) noexcept;
+make_acceptor(address<D> const&, config, int) noexcept;
 
 }; // namespace bsf::net::socket
 

@@ -1,49 +1,50 @@
-#include <libbsf/net/address/address.hpp>
+#include <libbsf/net/address/ipv4.hpp>
 #include <sstream> // std::ostringstream
 
-using Address = bsf::net::address::address<bsf::net::domain::ipv4>;
+namespace bsf::net {
+
+using Address = address<domain::ipv4>;
 
 // Basic operations
 
-template<>
 Address::address(host_t host, port_t port) noexcept:
-	_raw{
-		.sin_family = static_cast<sa_family_t>(domain),
-		.sin_port = ::htons(port),
-		.sin_addr{ .s_addr = ::htonl(host) },
-		.sin_zero{},
+	Base{
+		sockaddr_in{
+			.sin_family = static_cast<sa_family_t>(domain),
+			.sin_port = ::htons(port),
+			.sin_addr{ .s_addr = ::htonl(host) },
+			.sin_zero{},
+		}
 	} {}
 
-template<>
-Address::address() noexcept:
-	address{ host_t{}, port_t{} } {}
-
-template<>
 std::optional<Address>
 Address::from_string(char const* str) noexcept {
 	Address	res;
-	auto&	raw = res._raw;
+	auto&	raw = res._data;
 	if (::inet_aton(str, &raw.sin_addr) == 0) return (std::nullopt);
 	raw.sin_family = static_cast<sa_family_t>(domain);
 	raw.sin_port = 0;
 	return (res);
 }
 
+
+Address
+Address::any(port_t port) noexcept {
+	return (Address{ INADDR_ANY, port });
+}
+
 // Public methods
 
-template<>
 Address::host_t
 Address::host() const noexcept {
-	return (::ntohl(_raw.sin_addr.s_addr));
+	return (::ntohl(_data.sin_addr.s_addr));
 }
 
-template<>
 Address::port_t
 Address::port() const noexcept {
-	return (::ntohs(_raw.sin_port));
+	return (::ntohs(_data.sin_port));
 }
 
-template<>
 std::string
 Address::to_string() const {
 	std::ostringstream	oss;
@@ -55,3 +56,5 @@ Address::to_string() const {
 	oss << std::to_string(octets[0]) << ':' << std::to_string(port());
 	return (oss.str());
 }
+
+}; // namespace bsf::net

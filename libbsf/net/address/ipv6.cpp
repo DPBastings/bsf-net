@@ -1,43 +1,45 @@
-#include <libbsf/net/address/address.hpp>
+#include <libbsf/net/address/ipv6.hpp>
 #include <sstream> // std::ostringstream
 
-using Address = bsf::net::address::address<bsf::net::domain::ipv6>;
+namespace bsf::net {
+
+using Address = address<domain::ipv6>;
 
 // Basic operations
 
-template<>
 Address::address(host_t host, port_t port) noexcept:
-	_raw{
-		.sin6_family = static_cast<sa_family_t>(domain),
-		.sin6_port = ::htons(port),
-		.sin6_flowinfo = 0,
-		.sin6_addr = host,
-		.sin6_scope_id = 0,
+	Base{
+		sockaddr_in6{
+			.sin6_family = static_cast<sa_family_t>(domain),
+			.sin6_port = ::htons(port),
+			.sin6_flowinfo = 0,
+			.sin6_addr = host,
+			.sin6_scope_id = 0,
+		}
 	} {}
 
-template<>
-Address::address() noexcept:
-	address{ host_t{}, port_t{} } {}
+
+Address
+Address::any(port_t port) noexcept {
+	return (Address{ IN6ADDR_ANY_INIT, port });
+}
 
 // Public methods
 
-template<>
 Address::port_t
 Address::port() const noexcept {
-	return (::ntohs(_raw.sin6_port));
+	return (::ntohs(_data.sin6_port));
 }
 
-template<>
 Address::host_t
 Address::host() const noexcept {
-	return (_raw.sin6_addr);
+	return (_data.sin6_addr);
 }
 
-template<>
 std::string
 Address::to_string() const {
 	std::ostringstream	oss;
-	host_t			hostnum = host();
+	host_t				hostnum = host();
 	uint16_t const*		groups = reinterpret_cast<uint16_t const*>(&hostnum);
 
 	oss.setf(std::ios::hex);
@@ -47,3 +49,5 @@ Address::to_string() const {
 	oss << groups[0] << "]:" << std::to_string(port());
 	return (oss.str());
 }
+
+}; // namespace bsf::net

@@ -21,7 +21,7 @@ Miscellaneous options to be set on the socket's file descriptor. Possible values
 
 ## Member types
 - `address`
-The address type associated with this kind of socket. Equates `bsf::net::address<DOMAIN>`.
+The address type associated with this kind of socket. Equates `bsf::net<DOMAIN>`.
 - `OptionList`
 Aggregate type containing an arbitrary number of `socketOption`s.
 
