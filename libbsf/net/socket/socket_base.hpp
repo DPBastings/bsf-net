@@ -190,42 +190,78 @@ struct traits<send_buffer_size>: traits_base<int, true> {};
 
 }; // namespace option
 
+/**
+ * @brief Base socket class.
+ *
+ * The `socket_base` class template exposes the least derived socket-related
+ * API endpoints.
+ * @tparam D The socket's *domain*: the address family to which the socket
+ * belongs.
+ * @tparam T The socket's *type*: the way communications per way of this socket
+ * are structured.
+ */
 template<domain::domain D, type::type T>
 class socket_base: public handle {
 public:
+<<<<<<< HEAD
 	using address_t = address<D>;
+=======
+	/// @brief The socket's address type.
+	using address_t = address::address<D>;
+>>>>>>> 097ef782fc402f109d31b80ba0f59ea65c08836b
 
 	explicit socket_base() = default;
 
+	/// @brief Get the socket's domain (address family).
 	[[nodiscard]] static constexpr auto	domain() noexcept;
+	/// @brief Get the socket's type (communication structure).
 	[[nodiscard]] static constexpr auto	type() noexcept;
+	/// @brief Get the socket's protocol.
 	[[nodiscard]] int					protocol() const;
+	/// @brief Retrieve any pending socket error.
 	[[nodiscard]] int					error() const;
 
+<<<<<<< HEAD
 	[[nodiscard]] std::optional<address_t>	local_address() const;
+=======
+	/// @brief Get this socket's address.
+	[[nodiscard]] std::optional<address_t>	address() const;
+	/// @brief Get the address of this socket's peer.
+>>>>>>> 097ef782fc402f109d31b80ba0f59ea65c08836b
 	[[nodiscard]] std::optional<address_t>	peer_address() const;
 
+	/// @brief Query an option of this socket.
 	template<option::option Opt, int Level = SOL_SOCKET>
 	[[nodiscard]] auto	option() const
 		requires (option::traits<Opt>::is_readable);
+	/// @brief Configure an option on this socket.
 	template<option::option Opt, int Level = SOL_SOCKET>
 	void	option(option::traits<Opt>::value_type) const
 		requires (option::traits<Opt>::is_writeable);
 
-
+	/// @brief Bind this socket to a local address.
 	[[nodiscard]] bind_result		bind(address_t const&) const;
+	/// @brief Connect this socket to a remote address.
 	[[nodiscard]] connect_result	connect(address_t const&) const;
 
+	/// @brief Receive data from this socket.
 	[[nodiscard]] recv_result	recv(void*, std::size_t) const;
 	[[nodiscard]] recv_result	recv(void*, std::size_t, recv_flag) const;
+	/// @brief Send data on this socket.
 	[[nodiscard]] send_result	send(void const*, std::size_t) const;
 	[[nodiscard]] send_result	send(void const*, std::size_t, send_flag) const;
 
+	/// @brief Create a new socket.
 	[[nodiscard]] static std::optional<socket_base>				make(config);
+	/// @brief Create a pair of connected sockets.
 	[[nodiscard]] static std::pair<socket_base, socket_base>	make_pair(config)
+<<<<<<< HEAD
 		requires (D == domain::unix);
 protected:
 	bool	listen(int) const noexcept;
+=======
+		requires (D == domain::local);
+>>>>>>> 097ef782fc402f109d31b80ba0f59ea65c08836b
 private:
 	friend class address<D>;
 

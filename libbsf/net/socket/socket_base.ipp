@@ -151,12 +151,6 @@ socket_base<D, T>::connect(address_t const& addr) const {
 	return (true);
 }
 
-template<domain::domain D, type::type T>
-bool
-socket_base<D, T>::listen(int backlog) const noexcept {
-	return (::listen(raw(), backlog) != -1);
-}
-
 // I/O operations
 
 template<domain::domain D, type::type T>

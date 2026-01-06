@@ -13,6 +13,8 @@ enum type {
 
 template<bool ConnectionBased>
 struct traits_base {
+    /// Whether this communications mode is connection-based. Notably, only 
+    /// connection-based sockets can listen for incoming connection requests.
     static constexpr bool   is_connection_based = ConnectionBased;
 };
 

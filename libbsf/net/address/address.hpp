@@ -39,6 +39,7 @@ protected:
 template<domain::domain D>
 class address;
 
+/// @brief Convert an address to a text representation.
 template<domain::domain D>
 [[nodiscard]] std::string
 to_string(address<D> const& that) {
