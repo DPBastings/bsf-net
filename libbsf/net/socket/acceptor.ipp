@@ -5,15 +5,21 @@ namespace bsf::net::socket {
 
 // Basic operations
 
-/// @brief Create an acceptor from a socket base.
-/// @post The acceptor will retain the base's address binding and listening
-/// status.
 template<domain::domain D, type::type T>
 acceptor<D, T>::acceptor(Base&& base) noexcept:
 	socket_base<D, T>{ std::move(base) } {}
 
 // Factories
 
+/**
+ * @param addr The address to which the new acceptor will be bound.
+ * @param conf Configuration for the new acceptor.
+ * @param backlog The number of pending connection requests that will be kept
+ * in the acceptor's backlog (before they are `accept()`ed). If a connection
+ * request comes in whilst the backlog is full, connection will be refused.
+ * @return A useable acceptor socket, or nothing if an error occurred during
+ * creation.
+ */
 template<domain::domain D, type::type T>
 std::optional<acceptor<D, T>>
 acceptor<D, T>::make(address_t const& addr, config conf, int backlog) noexcept {
@@ -27,6 +33,9 @@ acceptor<D, T>::make(address_t const& addr, config conf, int backlog) noexcept {
 
 // I/O methods
 
+/**
+ * @param conf The configuration parameters for the newly-created local socket.
+ */
 template<domain::domain D, type::type T>
 acceptor<D, T>::accept_result
 acceptor<D, T>::accept(config conf) const {
@@ -35,6 +44,10 @@ acceptor<D, T>::accept(config conf) const {
 	return (accept(addr, conf));
 }
 
+/**
+ * @param addr The address of the peer socket.
+ * @param conf The configuration parameters for the newly-created local socket.
+ */
 template<domain::domain D, type::type T>
 acceptor<D, T>::accept_result
 acceptor<D, T>::accept(address_t& addr, config conf) const {
@@ -49,8 +62,17 @@ acceptor<D, T>::accept(address_t& addr, config conf) const {
 	return (socket_t{ raw });
 }
 
+template<domain::domain D, type::type T>
+bool
+acceptor<D, T>::listen(int backlog) const noexcept {
+	return (::listen(raw(), backlog) != -1);
+}
+
 // Non-member functions
 
+/**
+ * @note Equivalent to calling the static `make()` member of `acceptor<D, T>`.
+ */
 template<domain::domain D, type::type T>
 std::optional<acceptor<D, T>>
 make_acceptor(address::address<D> const& addr, config conf, int backlog) noexcept {

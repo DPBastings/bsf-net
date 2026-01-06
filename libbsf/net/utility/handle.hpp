@@ -3,6 +3,9 @@
 
 namespace bsf::net {
 
+/**
+ * 
+ */
 class handle {
 public:
 	using raw_t = int;

@@ -42,6 +42,18 @@ template<>
 struct traits<domain::local>:
 	traits_base<sockaddr_un, char const*, void_t, nullptr> {};
 
+/**
+ * @brief Address class.
+ *
+ * An address represents the identity of a communication endpoint, which is
+ * unique within the network on which the communication takes place. Primarily,
+ * an address is used to bind a socket (which is itself to be conceptualized as
+ * a *handle* of a communication endpoint) in order to render it useable.
+ * @tparam D The address' *domain*, or the *family* it belongs to. In many
+ * cases, an address family directly corresponds with a particular
+ * communications network (though with at least one particularly notable
+ * exception: the Internet has two address families associated with it). 
+ */
 template<domain::domain D>
 class address {
 public:
@@ -51,15 +63,21 @@ public:
 	using port_t = traits<D>::port_t;
 
 	address() noexcept;
+	/// @brief Construct an address from a host.
 	address(host_t) noexcept
 		requires (!traits<D>::has_port);
+	/// @brief Construct an address from a host and a port.
 	address(host_t, port_t) noexcept
 		requires (traits<D>::has_port);
 
+	/// @brief Create an address from its text representation.
 	[[nodiscard]] static std::optional<address>	from_string(char const*) noexcept;
+	/// @brief Convert an address to a text representation.
 	[[nodiscard]] std::string					to_string() const;
 
+	/// @brief Get the host part of the address.
 	[[nodiscard]] host_t	host() const noexcept;
+	/// @brief Get the port part of the address.
 	[[nodiscard]] port_t	port() const noexcept;
 
 	sockaddr*		raw_ptr() noexcept;
@@ -73,6 +91,7 @@ private:
 	socklen_t	_size = sizeof(storage_t);
 }; // class address
 
+/// @brief Convert an address to a text representation.
 template<domain::domain D>
 [[nodiscard]] std::string
 to_string(address<D> const&);
