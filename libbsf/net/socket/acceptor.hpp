@@ -67,8 +67,6 @@ public:
 	[[nodiscard]] accept_result	accept(address_t&, config) const;
 private:
 	acceptor(Base&&) noexcept;
-
-	bool	listen(int);
 }; // class acceptor<D, T>
 
 /// @brief Create a new acceptor socket.

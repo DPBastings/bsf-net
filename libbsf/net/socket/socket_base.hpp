@@ -203,12 +203,7 @@ struct traits<send_buffer_size>: traits_base<int, true> {};
 template<domain::domain D, type::type T>
 class socket_base: public handle {
 public:
-<<<<<<< HEAD
 	using address_t = address<D>;
-=======
-	/// @brief The socket's address type.
-	using address_t = address::address<D>;
->>>>>>> 097ef782fc402f109d31b80ba0f59ea65c08836b
 
 	explicit socket_base() = default;
 
@@ -221,13 +216,7 @@ public:
 	/// @brief Retrieve any pending socket error.
 	[[nodiscard]] int					error() const;
 
-<<<<<<< HEAD
 	[[nodiscard]] std::optional<address_t>	local_address() const;
-=======
-	/// @brief Get this socket's address.
-	[[nodiscard]] std::optional<address_t>	address() const;
-	/// @brief Get the address of this socket's peer.
->>>>>>> 097ef782fc402f109d31b80ba0f59ea65c08836b
 	[[nodiscard]] std::optional<address_t>	peer_address() const;
 
 	/// @brief Query an option of this socket.
@@ -255,13 +244,10 @@ public:
 	[[nodiscard]] static std::optional<socket_base>				make(config);
 	/// @brief Create a pair of connected sockets.
 	[[nodiscard]] static std::pair<socket_base, socket_base>	make_pair(config)
-<<<<<<< HEAD
 		requires (D == domain::unix);
 protected:
-	bool	listen(int) const noexcept;
-=======
-		requires (D == domain::local);
->>>>>>> 097ef782fc402f109d31b80ba0f59ea65c08836b
+	bool	listen(int) const noexcept
+		requires (type::traits<T>::is_connection_based);
 private:
 	friend class address<D>;
 

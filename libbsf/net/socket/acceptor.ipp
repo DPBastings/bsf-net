@@ -62,12 +62,6 @@ acceptor<D, T>::accept(address_t& addr, config conf) const {
 	return (socket_t{ raw });
 }
 
-template<domain::domain D, type::type T>
-bool
-acceptor<D, T>::listen(int backlog) const noexcept {
-	return (::listen(raw(), backlog) != -1);
-}
-
 // Non-member functions
 
 /**
