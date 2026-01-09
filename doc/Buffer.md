@@ -1,7 +1,7 @@
 # Buffer
 ```cpp
 template<size_t SIZE>
-class network::Buffer;
+class bsf::net::Buffer;
 ```
 Class that stores a byte buffer with a capacity of `SIZE`, to be used with a socket's `read()` and `write()` methods.
 ## Member types

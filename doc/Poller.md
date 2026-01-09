@@ -1,6 +1,6 @@
 # POLLER
 ```cpp
-class network::poller: public handle;
+class bsf::net::poller: public handle;
 ```
 Class representing a collection of sockets that can be _polled_ for the availability of I/O operations.
 ## Member types
@@ -47,7 +47,7 @@ size_t	poller::size() const noexcept;
 template<typename T>
 Sharedhandle	poller::add(T&& handle, event_types events, Modes modes);
 ```
-- `handle` should be an instance of class `network::handle` or of a derived class.
+- `handle` should be an instance of class `bsf::net::handle` or of a derived class.
 - Add `handle` to the interest list, checking for events of `events` type in `modes` modes. This involves a call to `epoll_ctl()` and also converts `handle` into a shared handle, which is from henceforth (also) owned by this poller.
 #### wait
 ```cpp

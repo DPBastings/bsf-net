@@ -1,0 +1,284 @@
+#ifndef BSF_EXPECTED_IPP
+# define BSF_EXPECTED_IPP
+
+# include <type_traits> // std::decay_t
+
+namespace bsf {
+
+/// @brief Default constructor: default-initialize the unexpected value.
+template<typename T, typename E>
+expected<T, E>::expected():
+	_error{},
+	_has_value{ false } {}
+
+/// @brief Destructor.
+template<typename T, typename E>
+expected<T, E>::~expected() {
+	destroy();
+}
+
+/// @brief Copy constructor.
+template<typename T, typename E>
+template<typename U, typename F>
+expected<T, E>::expected(expected<U, F> const& that):
+	_has_value{ that._has_value } {
+	copy(that);
+}
+
+/// @brief Copy-assign operator.
+template<typename T, typename E>
+template<typename U, typename F>
+expected<T, E>&
+expected<T, E>::operator=(expected<U, F> const& that) {
+	if (this == &that) return (*this);
+	destroy();
+	_has_value = that._has_value;
+	copy(that);
+	return (*this);
+}
+
+/// @brief Move constructor.
+template<typename T, typename E>
+template<typename U, typename F>
+expected<T, E>::expected(expected<U, F>&& that) noexcept:
+	_has_value{ that._has_value } {
+	move(std::move(that));
+}
+
+/// @brief Move-assign operator.
+template<typename T, typename E>
+template<typename U, typename F>
+expected<T, E>&
+expected<T, E>::operator=(expected<U, F>&& that) noexcept {
+	if (this == &that) return (*this);
+	destroy();
+	_has_value = that._has_value;
+	move(std::move(that));
+	return (*this);
+}
+
+template<typename T, typename E>
+template<typename U, typename F>
+void
+expected<T, E>::copy(expected<U, F> const& that) {
+	if (that._has_value) {
+		(void)new(&_value) T{ that._value };
+	} else {
+		(void)new(&_error) E{ that._error };
+	}
+}
+
+
+template<typename T, typename E>
+template<typename U, typename F>
+void
+expected<T, E>::move(expected<U, F>&& that) noexcept {
+	if (that._has_value) {
+		(void)new(&_value) T{ std::move(that._value) };
+	} else {
+		(void)new(&_error) E{ std::move(that._error) };
+	}
+}
+
+/// @brief Move-construct an expected value.
+template<typename T, typename E>
+template<typename U>
+expected<T, E>::expected(U&& that):
+	_value{ std::forward<U>(that) },
+	_has_value{ true } {}
+
+/// @brief Copy-construct an unexpected value.
+template<typename T, typename E>
+template<typename F>
+expected<T, E>::expected(unexpected<F> const& that):
+	_error{ that },
+	_has_value{ false } {}
+
+/// @brief Copy-assign an unexpected value.
+template<typename T, typename E>
+template<typename F>
+expected<T, E>&
+expected<T, E>::operator=(unexpected<F> const& that) {
+	destroy();
+	_has_value = false;
+	_error = that;
+	return (*this);
+}
+
+/// @brief Move-construct an unexpected value.
+template<typename T, typename E>
+expected<T, E>::expected(unexpected<E>&& that) noexcept:
+	_error{ std::forward<unexpected<E>>(that).error() },
+	_has_value{ false } {}
+
+/// @brief Move-assign an unexpected value.
+template<typename T, typename E>
+expected<T, E>&
+expected<T, E>::operator=(unexpected<E>&& that) noexcept {
+	destroy();
+	_has_value = false;
+	_error = std::forward<E>(that.error());
+	return (*this);
+}
+
+
+/**
+ * @brief Get a pointer to the expected value.
+ * @return A pointer-constant to the expected value.
+ * @note If the instance does not hold a value, the behaviour is undefined. 
+ */
+template<typename T, typename E>
+T const*
+expected<T, E>::operator->() const noexcept {
+	return (&_value);
+}
+
+/**
+ * @brief Get a pointer to the expected value.
+ * @return A pointer to the expected value.
+ * @note If the instance does not hold a value, the behaviour is undefined. 
+ */
+template<typename T, typename E>
+T*
+expected<T, E>::operator->() noexcept {
+	return (&_value);
+}
+
+/**
+ * @brief Get a reference to the expected value.
+ * @return A constant reference to the expected value.
+ * @note If the instance does not hold a value, the behaviour is undefined. 
+ */
+template<typename T, typename E>
+T const&
+expected<T, E>::operator*() const noexcept {
+	return (_value);
+}
+
+/**
+ * @brief Get a reference to the expected value.
+ * @return A reference to the expected value.
+ * @note If the instance does not hold a value, the behaviour is undefined. 
+ */
+template<typename T, typename E>
+T&
+expected<T, E>::operator*() noexcept {
+	return (_value);
+}
+
+/// @brief Check whether the instance holds an expected value.
+template<typename T, typename E>
+bool
+expected<T, E>::has_value() const noexcept {
+	return (_has_value);
+}
+
+/**
+ * @brief Check whether the instance holds an expected value.
+ * @note Equivalent to calling `has_value()`.
+ */
+template<typename T, typename E>
+expected<T, E>::operator bool() const noexcept {
+	return (has_value());
+}
+
+/**
+ * @brief Access the expected value.
+ * @return A constant reference to the expected value.
+ * @throw `bad_expected_access` if this instance does not hold an expected 
+ * value.
+ */
+template<typename T, typename E>
+T const&
+expected<T, E>::value() const {
+	if (!has_value()) {
+		throw (bad_expected_access<std::decay_t<E>>(_error));
+	}
+	return (_value);
+}
+
+/**
+ * @brief Access the expected value.
+ * @return A reference to the expected value.
+ * @throw `bad_expected_access` if this instance does not hold an expected 
+ * value.
+ */
+template<typename T, typename E>
+T&
+expected<T, E>::value() {
+	if (!has_value()) {
+		throw (bad_expected_access<std::decay_t<E>>(std::move(_error)));
+	}
+	return (_value);
+}
+
+/**
+ * @brief Access the error.
+ * @return A constant reference to the error.
+ * @note If the instance does not hold an error, the behaviour is undefined.
+ */
+template<typename T, typename E>
+E const&
+expected<T, E>::error() const {
+	return (_error);
+}
+
+/**
+ * @brief Access the error.
+ * @return A reference to the error.
+ * @note If the instance does not hold an error, the behaviour is undefined.
+ */
+template<typename T, typename E>
+E&
+expected<T, E>::error() {
+	return (_error);
+}
+
+
+
+template<typename T, typename E>
+void
+expected<T, E>::destroy() noexcept {
+	if (has_value()) {
+		_value.~T();
+	} else {
+		_error.~E();
+	}
+}
+
+
+
+template<typename E>
+template<typename T>
+unexpected<E>::unexpected(T&& that) noexcept:
+	_error(std::forward<T>(that)) {}
+
+template<typename E>
+template<typename... Args>
+unexpected<E>::unexpected(Args&&... args):
+	_error(std::forward<Args>(args)...) {}
+
+template<typename E>
+E const&
+unexpected<E>::error() const& noexcept {
+	return (_error);
+}
+template<typename E>
+E&
+unexpected<E>::error() & noexcept {
+	return (_error);
+}
+template<typename E>
+E const&&
+unexpected<E>::error() const&& noexcept {
+	return (std::move(_error));
+}
+template<typename E>
+E&&
+unexpected<E>::error() && noexcept {
+	return (std::move(_error));
+}
+
+}; // namespace bsf
+
+#endif // BSF_EXPECTED_IPP

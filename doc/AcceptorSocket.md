@@ -1,7 +1,7 @@
 # acceptor_socket
 ```cpp
-template<network::socket_domain DOMAIN>
-class network::acceptor_socket: public network::stream_socket<DOMAIN>;
+template<bsf::net::domain::domain DOMAIN>
+class bsf::net::acceptor_socket: public bsf::net::stream_socket<DOMAIN>;
 ```
 Class representing a socket that can listen for incoming connections.
 ## Member types

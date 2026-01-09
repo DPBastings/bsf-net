@@ -5,32 +5,33 @@ set(CMAKE_CXX_STANDARD_REQUIRES ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 project(
-	NetPP
+	"BSF Net"
 	VERSION 1.0
 	DESCRIPTION "A networking library for C++"
 	LANGUAGES CXX)
 
-add_library(
-	netpp-20
-	source/address_ipv4.cpp
-	source/address_ipv6.cpp
-	source/address_local.cpp
-	source/exception.cpp
-	source/handle.cpp
-	source/misc.cpp
-	source/poller.cpp)
-target_include_directories(
-	netpp-20
+add_library(bsf-net
+	libbsf/net/address/ipv4.cpp
+	libbsf/net/address/ipv6.cpp
+	# libbsf/net/address/address_local.cpp
+	libbsf/net/async/event.cpp
+	libbsf/net/async/poller.cpp
+	libbsf/net/socket/acceptor.cpp
+	libbsf/net/socket/socket_base.cpp
+	libbsf/net/utility/except.cpp
+	libbsf/net/utility/handle.cpp
+)
+target_include_directories(bsf-net
 	PUBLIC
-	include)
-target_compile_features(
-	netpp-20
+		${CMAKE_CURRENT_SOURCE_DIR}
+)
+target_compile_features(bsf-net
 	PUBLIC
-	cxx_std_20)
-target_compile_options(
-	netpp-20
+		cxx_std_20
+)
+target_compile_options(bsf-net
 	PUBLIC
-	-Wall -Wextra -Werror -g
+		-Wall -Wextra -Werror -g
 )
 
 add_subdirectory(test)

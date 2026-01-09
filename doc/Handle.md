@@ -1,6 +1,6 @@
 # handle
 ```cpp
-class network::handle
+class bsf::net::handle
 ```
 A class that serves as a wrapper around the humble Unix file descriptor, mainly managing its lifetime.
 
@@ -13,7 +13,7 @@ A reference to a handle of which the ownership is shared amongst several scopes.
 - `raw_type`	The type of the underlying file descriptor: equates `int`.
 
 ## Member constants
-- `static constexpr raw_type	_invalid_handle = -1;`
+- `static constexpr raw_type	null = -1;`
 
 ## Methods
 ### Constructors
@@ -26,13 +26,13 @@ handle(handle&& that) noexcept;            // 5
 handle&	operator=(handle const& that);	   // 6
 handle&	operator=(handle&& that) noexcept; // 7
 ```
-1. Default constructor: initialize the underlying file descriptor to `_invalid_handle`.
+1. Default constructor: initialize the underlying file descriptor to `null`.
 2. Destructor: `close()` the underlying file descriptor.
 3. Initialize the underlying file descriptor to `fd`.
 4. Copy constructor: initialize the underlying file descriptor to a `dup()`licate of `that`.
-5. Move constructor: initialize the underlying file descriptor to `that`; its file descriptor is set to `_invalid_handle`.
+5. Move constructor: initialize the underlying file descriptor to `that`; its file descriptor is set to `null`.
 6. Copy assigner: set the underlying file descriptor to a `dup()`licate of `that`.
-7. Move assigner: set  the underlying file descriptor to `that`; its file descriptor is set to `_invalid_handle`.
+7. Move assigner: set  the underlying file descriptor to `that`; its file descriptor is set to `null`.
 
 ### Other methods
 All other methods are `protected`.

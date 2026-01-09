@@ -3,5 +3,5 @@
 
 ### socket
 ```cpp
-class network::socket: public handle;
+class bsf::net::socket: public handle;
 ```
