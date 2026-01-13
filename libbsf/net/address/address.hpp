@@ -18,12 +18,9 @@ public:
 	address_base() noexcept = default;
 	address_base(S const& data):
 		_data{ data } {}
-<<<<<<< HEAD
 	address_base(S const& data, socklen_t size):
 		_data{ data },
 		_size{ size } {}
-=======
->>>>>>> 7b7afed5d6463b8cc239b117a72f584896aca966
 
 	[[nodiscard]] sockaddr const*	data() const noexcept {
 		return (reinterpret_cast<sockaddr const*>(&_data));
