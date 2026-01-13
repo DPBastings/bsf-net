@@ -38,7 +38,11 @@ TEST_CASE("ipv6 acceptor" "[acceptor ipv6 address]") {
 	using Address = address<domain::ipv6>;
 	using Acceptor = socket::acceptor<domain::ipv6, socket::type::stream>;
 
+<<<<<<< HEAD
 	Address	addr = Address::any(1100, 0);
+=======
+	Address	addr = Address::any(1100);
+>>>>>>> 7b7afed5d6463b8cc239b117a72f584896aca966
 	auto	s = Acceptor::make(addr, socket::config{}, 5);
 	REQUIRE(s);
 
