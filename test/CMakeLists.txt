@@ -9,6 +9,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(Catch2)
 
 add_executable(bsf-net_tests
+	socket/stream.test.cpp
 	address.test.cpp
 	protocol.test.cpp
 )

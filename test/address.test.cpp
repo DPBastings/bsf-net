@@ -3,7 +3,6 @@
 #include <libbsf/net/address/address.hpp>
 #include <libbsf/net/address/internet.hpp>
 #include <libbsf/net/socket/acceptor.hpp>
-#include <iostream>
 #include <string>
 
 extern "C" {
@@ -39,7 +38,7 @@ TEST_CASE("ipv6 acceptor" "[acceptor ipv6 address]") {
 	using Address = address<domain::ipv6>;
 	using Acceptor = socket::acceptor<domain::ipv6, socket::type::stream>;
 
-	Address	addr = Address::any(1100);
+	Address	addr = Address::any(1100, 0);
 	auto	s = Acceptor::make(addr, socket::config{}, 5);
 	REQUIRE(s);
 

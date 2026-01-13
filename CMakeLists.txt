@@ -13,7 +13,7 @@ project(
 add_library(bsf-net
 	libbsf/net/address/ipv4.cpp
 	libbsf/net/address/ipv6.cpp
-	# libbsf/net/address/address_local.cpp
+	libbsf/net/address/unix.cpp
 	libbsf/net/async/event.cpp
 	libbsf/net/async/poller.cpp
 	libbsf/net/socket/acceptor.cpp
@@ -34,4 +34,5 @@ target_compile_options(bsf-net
 		-Wall -Wextra -Werror -g
 )
 
+add_subdirectory(../utility external/)
 add_subdirectory(test)

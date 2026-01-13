@@ -162,34 +162,25 @@ socket_base<D, T>::listen(int backlog) const noexcept
 
 template<domain::domain D, type::type T>
 recv_result
-socket_base<D, T>::recv(void* data, std::size_t length) const {
-	return (recv(data, length, recv_flag::none));
-}
-
-template<domain::domain D, type::type T>
-recv_result
 socket_base<D, T>::recv(void* data, std::size_t length, recv_flag flag) const {
 	auto const	byte_count
-		= ::recv(_raw, data, length, static_cast<int>(flag));
+		= ::recv(raw(), data, length, static_cast<int>(flag));
 
-	if (byte_count == -1) return (bsf::unexpected(detail::get_recv_error()));
+	if (byte_count == -1) {
+		return (bsf::unexpected<recv_error>(detail::get_recv_error()));
+	}
 	return (static_cast<std::size_t>(byte_count));
 }
 
 template<domain::domain D, type::type T>
 send_result
-socket_base<D, T>::send(void const* data, std::size_t length) const {
-	return (send(data, length, send_flag::none));
-}
-
-
-template<domain::domain D, type::type T>
-send_result
 socket_base<D, T>::send(void const* data, std::size_t length, send_flag flag) const {
 	auto const	byte_count
-		= ::send(_raw, data, length, static_cast<int>(flag));
+		= ::send(raw(), data, length, static_cast<int>(flag));
 
-	if (byte_count == -1) return (bsf::unexpected(detail::get_send_error()));
+	if (byte_count == -1) {
+		return (bsf::unexpected<send_error>(detail::get_send_error()));
+	}
 	return (static_cast<std::size_t>(byte_count));
 }
 

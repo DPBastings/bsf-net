@@ -236,10 +236,8 @@ public:
 	[[nodiscard]] connect_result	connect(address_t const&) const;
 
 	/// @brief Receive data from this socket.
-	[[nodiscard]] recv_result	recv(void*, std::size_t) const;
 	[[nodiscard]] recv_result	recv(void*, std::size_t, recv_flag) const;
 	/// @brief Send data on this socket.
-	[[nodiscard]] send_result	send(void const*, std::size_t) const;
 	[[nodiscard]] send_result	send(void const*, std::size_t, send_flag) const;
 
 	/// @brief Create a new socket.
