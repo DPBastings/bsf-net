@@ -87,12 +87,11 @@ stream_buffer<N>::seek(streamsize offset) noexcept {
 }
 
 /**
- * @param offset The offset of the `end` pointer, relative to `next()`. Must be at least
+ * @param offset The offset of the `end` pointer, relative to `next()`.
  */
 template<std::size_t N>
 void
 stream_buffer<N>::set_end(std::size_t offset) noexcept {
-	assert(_next > _data);
 	assert(offset >= static_cast<std::size_t>(_next - _data));
 	assert(offset <= total_capacity());
 	_end = _data + offset;
@@ -232,7 +231,7 @@ stream_buffer<N>::unget(std::size_t n) noexcept {
 template<std::size_t N>
 void
 stream_buffer<N>::put(unsigned char b) noexcept {
-	*_next++ = b;
+	*_end++ = b;
 }
 
 /**
@@ -243,7 +242,7 @@ template<std::size_t N>
 void
 stream_buffer<N>::put(unsigned char const* src, std::size_t n) noexcept {
 	std::memcpy(_data, src, n);
-	_next += n;
+	_end += n;
 }
 
 /**
@@ -272,7 +271,6 @@ stream_buffer<N>::put_try(unsigned char const* src, std::size_t n) noexcept {
 	auto const	to_put = std::min(n, capacity());
 
 	put(src, to_put);
-	_next += to_put;
 	return (to_put);
 }
 

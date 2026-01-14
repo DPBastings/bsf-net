@@ -19,10 +19,21 @@ TEST_CASE("socket stream unix") {
 	};
 	REQUIRE(a.put_try(to_send[0], 4) == 4);
 	REQUIRE(b.put_try(to_send[1], 4) == 4);
-	REQUIRE(a.send());
-	REQUIRE(b.send());
-	REQUIRE(a.recv());
-	REQUIRE(b.recv());
+
+	auto const	sent_by_a = a.send();
+	auto const	sent_by_b = b.send();
+	REQUIRE(sent_by_a);
+	REQUIRE(*sent_by_a == 4);
+	REQUIRE(sent_by_b);
+	REQUIRE(*sent_by_b == 4);
+
+	auto const	received_by_a = a.recv();
+	auto const	received_by_b = b.recv();
+	REQUIRE(received_by_a);
+	REQUIRE(*received_by_a == 4);
+	REQUIRE(received_by_b);
+	REQUIRE(*received_by_b == 4);
+
 	static unsigned char	to_receive[2][5]{};
 	REQUIRE(a.get_try(to_receive[0], 4) == 4);
 	REQUIRE(b.get_try(to_receive[1], 4) == 4);

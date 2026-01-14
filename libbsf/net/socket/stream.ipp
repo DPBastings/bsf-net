@@ -184,7 +184,7 @@ stream<D, IC, OC>::recv(recv_flag flag) noexcept {
 		_in.clear(); // Discard putbacks in order to use the entire buffer.
 	}
 
-	auto	res = _socket.recv(_in.next() + 1, _in.capacity(), flag);
+	auto	res = _socket.recv(_in.next(), _in.capacity(), flag);
 
 	if (res) { // System call was successful.
 		_in.set_end(*res); // Mark all received bytes as available.
