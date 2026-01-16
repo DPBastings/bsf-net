@@ -34,5 +34,4 @@ target_compile_options(bsf-net
 		-Wall -Wextra -Werror -g
 )
 
-add_subdirectory(../utility external/)
 add_subdirectory(test)

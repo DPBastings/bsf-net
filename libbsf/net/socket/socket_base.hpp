@@ -237,8 +237,14 @@ public:
 
 	/// @brief Receive data from this socket.
 	[[nodiscard]] recv_result	recv(void*, std::size_t, recv_flag) const;
+	/// @brief Receive data from this socket.
+	[[nodiscard]] recv_result	recv(address_t const&, void*, std::size_t, recv_flag) const
+		requires (!type::traits<T>::is_connection_based);
 	/// @brief Send data on this socket.
 	[[nodiscard]] send_result	send(void const*, std::size_t, send_flag) const;
+	/// @brief Send data on this socket.
+	[[nodiscard]] send_result	send(address_t const&, void const*, std::size_t, send_flag) const
+		requires (!type::traits<T>::is_connection_based);
 
 	/// @brief Create a new socket.
 	[[nodiscard]] static std::optional<socket_base>				make(config);

@@ -160,6 +160,12 @@ socket_base<D, T>::listen(int backlog) const noexcept
 
 // I/O operations
 
+/**
+ * @param addr Address from which data is expected.
+ * @param data The memory in which the received data should be stored.
+ * @param length Number of bytes that should be received at the most.
+ * @param flag Receive flag bitmask.
+ */
 template<domain::domain D, type::type T>
 recv_result
 socket_base<D, T>::recv(void* data, std::size_t length, recv_flag flag) const {
@@ -172,11 +178,56 @@ socket_base<D, T>::recv(void* data, std::size_t length, recv_flag flag) const {
 	return (static_cast<std::size_t>(byte_count));
 }
 
+/**
+ * @param data The memory in which the received data should be stored.
+ * @param length Number of bytes that should be received at the most.
+ * @param flag Receive flag bitmask.
+ */
+template<domain::domain D, type::type T>
+recv_result
+socket_base<D, T>::recv(
+	address_t const& addr, void* data, std::size_t length, recv_flag flag
+) const requires (!type::traits<T>::is_connection_based) {
+	auto const	byte_count
+		= ::recv(raw(), data, length, static_cast<int>(flag), addr.ptr(), addr.size());
+
+	if (byte_count == -1) {
+		return (bsf::unexpected<recv_error>(detail::get_recv_error()));
+	}
+	return (static_cast<std::size_t>(byte_count));
+}
+
+/**
+ * @param data Pointer to the data to be transmitted.
+ * @param length Length of the data.
+ * @param flag Send flag bitmask.
+ */
 template<domain::domain D, type::type T>
 send_result
 socket_base<D, T>::send(void const* data, std::size_t length, send_flag flag) const {
 	auto const	byte_count
 		= ::send(raw(), data, length, static_cast<int>(flag));
+
+	if (byte_count == -1) {
+		return (bsf::unexpected<send_error>(detail::get_send_error()));
+	}
+	return (static_cast<std::size_t>(byte_count));
+}
+
+/**
+ * @param addr Address to deliver the data to.
+ * @param data Pointer to the data to be transmitted.
+ * @param length Length of the data.
+ * @param flag Send flag bitmask.
+ */
+template<domain::domain D, type::type T>
+send_result
+socket_base<D, T>::send(
+	address_t const& addr, void const* data, std::size_t length, send_flag flag
+) const
+	requires (!type::traits<T>::is_connection_based) {
+	auto const	byte_count
+		= ::sendto(raw(), data, length, static_cast<int>(flag), addr.ptr(), addr.size());
 
 	if (byte_count == -1) {
 		return (bsf::unexpected<send_error>(detail::get_send_error()));
