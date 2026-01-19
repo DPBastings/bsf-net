@@ -29,7 +29,9 @@ public:
 	std::size_t	peek_try(unsigned char&) const noexcept;
 	/// @brief Attempt to read a range of bytes.
 	std::size_t	peek_try(unsigned char*, std::size_t) const noexcept;
-
+	
+	/// @brief Query the number of readable bytes.
+	std::size_t	in_avail() const noexcept;
 	/// @brief Extract a byte.
 	void		get(unsigned char&) noexcept;
 	/// @brief Extract a range of bytes.

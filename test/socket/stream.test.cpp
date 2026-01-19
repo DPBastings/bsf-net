@@ -31,8 +31,10 @@ TEST_CASE("socket stream unix") {
 	auto const	received_by_b = b.recv();
 	REQUIRE(received_by_a);
 	REQUIRE(*received_by_a == 4);
+	REQUIRE(*received_by_a == a.in_avail());
 	REQUIRE(received_by_b);
 	REQUIRE(*received_by_b == 4);
+	REQUIRE(*received_by_b == b.in_avail());
 
 	static unsigned char	to_receive[2][5]{};
 	REQUIRE(a.get_try(to_receive[0], 4) == 4);

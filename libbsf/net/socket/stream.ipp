@@ -25,6 +25,12 @@ stream<D, IC, OC>::make(address_t const& addr, config conf) noexcept {
 	}
 }
 
+template<domain::domain D, std::size_t IC, std::size_t OC>
+std::size_t
+stream<D, IC, OC>::in_avail() const noexcept {
+	return (_in.available());
+}
+
 /**
  * @param b Reference to the byte to be inspected.
  * @warning If then input buffer has no read position available, the behaviour 
