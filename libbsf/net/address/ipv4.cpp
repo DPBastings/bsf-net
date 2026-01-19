@@ -18,12 +18,12 @@ Address::address(host_t host, port_t port) noexcept:
 	} {}
 
 std::optional<Address>
-Address::from_string(char const* str) noexcept {
+Address::from_string(char const* str, port_t port) noexcept {
 	Address	res;
 	auto&	raw = res._data;
 	if (::inet_aton(str, &raw.sin_addr) == 0) return (std::nullopt);
 	raw.sin_family = static_cast<sa_family_t>(domain);
-	raw.sin_port = 0;
+	raw.sin_port = port;
 	return (res);
 }
 

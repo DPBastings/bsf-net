@@ -20,7 +20,7 @@ TEST_CASE("address ipv4") {
 	Address const	a1{ 0, 443 };
 	REQUIRE(to_string(a1) == "0.0.0.0:443");
 
-	auto const	a2 = Address::from_string("192.168.0.0");
+	auto const	a2 = Address::from_string("192.168.0.0", 0);
 	REQUIRE(a2);
 	REQUIRE(to_string(*a2) == "192.168.0.0:0");
 }

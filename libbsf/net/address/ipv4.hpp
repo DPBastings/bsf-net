@@ -22,7 +22,7 @@ public:
 	[[nodiscard]] static address	any(port_t) noexcept;
 
 	/// @brief Create an address from its string representation.
-	[[nodiscard]] static std::optional<address>	from_string(char const*) noexcept;
+	[[nodiscard]] static std::optional<address>	from_string(char const*, port_t) noexcept;
 	/// @brief Get this address' string representation.
 	[[nodiscard]] std::string					to_string() const;
 
