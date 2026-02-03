@@ -24,6 +24,11 @@ public:
 	/// @brief Close the stream.
 	void	close() noexcept;
 
+	/// @brief Manage the input buffer.
+	stream_buffer<InCap>&	inbuf() noexcept;
+	/// @brief Manage the output buffer.
+	stream_buffer<OutCap>&	outbuf() noexcept;
+
 	/// @brief Read a byte.
 	void		peek(unsigned char&) const noexcept;
 	/// @brief Read a range of bytes.

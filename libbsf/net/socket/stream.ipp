@@ -33,6 +33,18 @@ stream<D, IC, OC>::close() noexcept {
 	_socket.close();
 }
 
+template<domain::domain D, std::size_t IC, std::size_t OC>
+stream_buffer<IC>&
+stream<D, IC, OC>::inbuf() noexcept {
+	return (_in);
+}
+
+template<domain::domain D, std::size_t IC, std::size_t OC>
+stream_buffer<OC>&
+stream<D, IC, OC>::outbuf() noexcept {
+	return (_out);
+}
+
 
 template<domain::domain D, std::size_t IC, std::size_t OC>
 std::size_t
