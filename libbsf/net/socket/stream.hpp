@@ -21,6 +21,9 @@ public:
 	/// @brief Create a stream connected to a remote address.
 	static std::optional<stream>	make(address_t const&, config) noexcept;
 
+	/// @brief Close the stream.
+	void	close() noexcept;
+
 	/// @brief Read a byte.
 	void		peek(unsigned char&) const noexcept;
 	/// @brief Read a range of bytes.

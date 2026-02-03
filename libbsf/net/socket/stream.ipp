@@ -26,6 +26,15 @@ stream<D, IC, OC>::make(address_t const& addr, config conf) noexcept {
 }
 
 template<domain::domain D, std::size_t IC, std::size_t OC>
+void
+stream<D, IC, OC>::close() noexcept {
+	_in.clear();
+	_out.clear();
+	_socket.close();
+}
+
+
+template<domain::domain D, std::size_t IC, std::size_t OC>
 std::size_t
 stream<D, IC, OC>::in_avail() const noexcept {
 	return (_in.available());
