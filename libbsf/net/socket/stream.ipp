@@ -19,7 +19,7 @@ stream<D, IC, OC>::make(address_t const& addr, config conf) noexcept {
 	if (!sock) return (std::nullopt);
 
 	if (sock->connect(addr)) {
-		return (stream{ std::move(sock) });
+		return (stream{ std::move(*sock) });
 	} else {
 		return (std::nullopt);
 	}
